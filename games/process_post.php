@@ -94,7 +94,7 @@ try {
             $statement->execute($params);
             $newId = $db->lastInsertId();
             $db->commit();
-            header("Location: show_comments.php?id=$newId");
+            header("Location: ../comments/show_comments.php?id=$newId");
             exit;
 
         case 'Update':
@@ -122,7 +122,7 @@ try {
             $statement = $db->prepare($query);
             $statement->execute($params);
             $db->commit();
-            header("Location: show_comments.php?id=$id");
+            header("Location: ../comments/show_comments.php?id=$id");
             exit;
 
         case 'Delete':
@@ -134,7 +134,7 @@ try {
             $statement = $db->prepare($query);
             $statement->execute([':id' => $id]);
             $db->commit();
-            header("Location: index.php");
+            header("Location: ../index.php");
             exit;
 
         default:

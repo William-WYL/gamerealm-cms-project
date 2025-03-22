@@ -27,19 +27,19 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="../main.css">
     <title>Add New Game - GameRealm</title>
 </head>
 
 <body>
     <div id="wrapper">
         <div id="header">
-            <h1><a href="index.php">GameRealm - Add New Game</a></h1>
+            <h1><a href="../index.php">GameRealm - Add New Game</a></h1>
         </div> <!-- END div id="header" -->
         <ul id="menu">
-            <li><a href="index.php">Home</a></li>
+            <li><a href="../index.php">Home</a></li>
             <li><a href="post.php" class='active'>Add New Game</a></li>
-            <li><a href="./category/manage_categories.php">Manage Categories</a></li>
+            <li><a href="../categories/manage_categories.php">Manage Categories</a></li>
         </ul> <!-- END div id="menu" -->
         <div id="all_games">
             <form action="process_post.php" method="post">

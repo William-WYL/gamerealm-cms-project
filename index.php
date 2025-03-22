@@ -60,15 +60,21 @@ $statement->execute();
         <ul id="menu">
             <li><a href="index.php" class='active'>Home</a></li>
             <li><a href="./games/post.php">Add New Game</a></li>
-            <li><a href="./category/manage_categories.php">Manage Categories</a></li>
+            <li><a href="./categories/manage_categories.php">Manage Categories</a></li>
         </ul> <!-- END div id="menu" -->
 
         <div class="sort-options">
-            <span>Sort by:</span>
             <ul id="menu">
-                <li><a href="index.php?sort=title" class="<?= $sort == 'title' ? 'active' : '' ?>">Title</a></li>
-                <li><a href="index.php?sort=category" class="<?= $sort == 'category' ? 'active' : '' ?>">Category</a></li>
-                <li><a href="index.php?sort=date" class="<?= $sort == 'date' ? 'active' : '' ?>">Release Date</a></li>
+                <span>Sort by:</span>
+                <small>
+                    <li><a href="index.php?sort=title" class="<?= $sort == 'title' ? 'active' : '' ?>">Title</a></li>
+                </small>
+                <small>
+                    <li><a href="index.php?sort=category" class="<?= $sort == 'category' ? 'active' : '' ?>">Category</a></li>
+                </small>
+                <small>
+                    <li><a href="index.php?sort=date" class="<?= $sort == 'date' ? 'active' : '' ?>">Release Date</a></li>
+                </small>
             </ul>
         </div>
 
@@ -80,6 +86,12 @@ $statement->execute();
                             <?= htmlspecialchars($game['title']) ?>
                         </a>
                     </h2>
+                    <div class="game_image">
+                        this is the image
+                        <!-- <img
+                            src="<?= htmlspecialchars($game['cover_image']) ?>"
+                            alt="<?= htmlspecialchars($game['title']) ?>" /> -->
+                    </div>
                     <p>
                         <small>
                             Release Date:
@@ -89,7 +101,7 @@ $statement->execute();
                     <p>
                         <small>
                             ID: <?= htmlspecialchars($game['id']) ?>
-                            <a href="edit.php?id=<?= htmlspecialchars($game['id']) ?>">edit/delete</a>
+                            <a href="games/edit.php?id=<?= htmlspecialchars($game['id']) ?>">edit/delete</a>
                         </small>
                     </p>
                     <div class='game_category'>

@@ -8,11 +8,11 @@
 
  ****************/
 
-require('./tools/connect.php');
+require('../tools/connect.php');
 
 // Validate the game ID
 if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
-  header("refresh:1; URL=index.php");
+  header("refresh:1; URL=../index.php");
   die("Invalid game post ID."); // Stop execution if the ID is missing or invalid
 }
 
@@ -32,7 +32,7 @@ $game = $gameStatement->fetch(PDO::FETCH_ASSOC);
 
 // If no game post is found, display an error message
 if (!$game) {
-  header("refresh:1; URL=index.php");
+  header("refresh:1; URL=../index.php");
   die("Game post not found.");
 }
 
@@ -58,11 +58,10 @@ $comments = $commentStatement->fetchAll(PDO::FETCH_ASSOC);
 <body>
   <div id="wrapper">
     <div id="header">
-      <h1><a href="index.php">GameRealm - <?= htmlspecialchars($game['title']) ?></a></h1>
+      <h1><a href="../index.php">GameRealm - <?= htmlspecialchars($game['title']) ?></a></h1>
     </div> <!-- END div id="header" -->
     <ul id="menu">
-      <li><a href="index.php">Home</a></li>
-      <li><a href="post.php">New Post</a></li>
+      <li><a href="../index.php">Home</a></li>
     </ul> <!-- END div id="menu" -->
     <div id="all_games">
       <div class="game_post">
@@ -76,7 +75,7 @@ $comments = $commentStatement->fetchAll(PDO::FETCH_ASSOC);
         <p>
           <small>
             ID: <?= htmlspecialchars($game['id']) ?>
-            <a href="edit.php?id=<?= htmlspecialchars($game['id']) ?>">Edit/Delete</a>
+            <a href="../games/edit.php?id=<?= htmlspecialchars($game['id']) ?>">Edit/Delete</a>
           </small>
         </p>
         <div class='game_category'>

@@ -97,5 +97,16 @@ div.blog_content {
 div#footer {
   text-align: right;
   margin-top: 10px;
+}
 
+div.game_image {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: block;
+  width: 100px;
+  height: 100px;
+  border: 1px solid #000;
+  background-color: pink;
 }

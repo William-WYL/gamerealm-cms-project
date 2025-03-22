@@ -8,12 +8,12 @@
 
  ****************/
 
-require('./tools/connect.php');
-require('./tools/authenticate.php');
+require('../tools/connect.php');
+require('../tools/authenticate.php');
 
 // Validate the game ID
 if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
-    header("refresh:1; URL=index.php"); // Redirect to index.php after 1 seconds  
+    header("refresh:1; URL=../index.php"); // Redirect to index.php after 1 seconds  
     die("Invalid game post ID."); // Stop execution if the ID is missing or invalid
 }
 
@@ -33,7 +33,7 @@ $game = $gameStatement->fetch(PDO::FETCH_ASSOC);
 
 // If no game post is found, show an error
 if (!$game) {
-    header("refresh:1; URL=index.php"); // Redirect to index.php after 1 seconds  
+    header("refresh:1; URL=../index.php"); // Redirect to index.php after 1 seconds  
     die("Game post with ID $id not found."); // Stop execution if the post does not exist
 }
 
@@ -53,19 +53,19 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="../main.css">
     <title>Edit Game - GameRealm</title>
 </head>
 
 <body>
     <div id="wrapper">
         <div id="header">
-            <h1><a href="index.php">GameRealm - Edit Game</a></h1>
+            <h1><a href="../index.php">GameRealm - Edit Game</a></h1>
         </div> <!-- END div id="header" -->
         <ul id="menu">
-            <li><a href="index.php">Home</a></li>
+            <li><a href="../index.php">Home</a></li>
             <li><a href="post.php">Add New Game</a></li>
-            <li><a href="./category/manage_categories.php">Manage Categories</a></li>
+            <li><a href="../categories/manage_categories.php">Manage Categories</a></li>
         </ul> <!-- END div id="menu" -->
         <div id="all_games">
             <form action="process_post.php" method="post">
