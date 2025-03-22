@@ -1,6 +1,6 @@
 #all_games {
-  margin-top: 20px;
   max-width: 1100px;
+  margin: 20px auto;
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
@@ -19,8 +19,6 @@
   /* background-color: pink; */
   text-align: center;
 }
-
-.game_post a {}
 
 .game_post h2 {
   text-decoration: none;

@@ -88,9 +88,8 @@ $statement->execute();
                         </a>
                     </h2>
                     <div class="game_image">
-
                         <img
-                            src="./asset/images/GTA5.png"
+                            src="./asset/images/<?= htmlspecialchars($game['cover_image']) ?>"
                             alt="<?= htmlspecialchars($game['title']) ?>" />
                     </div>
                     <p>
