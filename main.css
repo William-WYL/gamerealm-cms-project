@@ -21,7 +21,9 @@ fieldset {
 }
 
 #wrapper {
-  width: 800px;
+  max-width: 1200px;
+  min-width: 800px;
+  width: 90%;
   margin: 10px auto;
   text-align: left;
   border: 1px solid grey;
@@ -29,7 +31,7 @@ fieldset {
   background: #EEEEEE;
 }
 
-div.blog_post h2 a,
+div.game_post h2 a,
 div#header h1 a {
   text-decoration: none;
   color: black;
@@ -40,17 +42,6 @@ div#header h1 {
   font-size: 2.5em;
 }
 
-div.blog_post h2 {
-  margin-bottom: 0;
-}
-
-div.blog_post p {
-  margin-top: 0;
-}
-
-div.blog_post div.blog_content p {
-  margin-top: 0.5em;
-}
 
 ul#menu li {
   display: inline;
@@ -80,7 +71,7 @@ ul#menu li a:hover {
   color: black;
 }
 
-div#all_blogs {
+div#all_games {
   border: 2px solid grey;
   padding: 0 10px 10px 10px;
 }
@@ -97,16 +88,4 @@ div.blog_content {
 div#footer {
   text-align: right;
   margin-top: 10px;
-}
-
-div.game_image {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: block;
-  width: 100px;
-  height: 100px;
-  border: 1px solid #000;
-  background-color: pink;
 }

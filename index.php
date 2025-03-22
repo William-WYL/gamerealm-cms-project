@@ -49,6 +49,7 @@ $statement->execute();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="main.css" type="text/css">
+    <link rel="stylesheet" href="index.css" type="text/css">
     <title>Welcome to GameRealm!</title>
 </head>
 
@@ -87,10 +88,10 @@ $statement->execute();
                         </a>
                     </h2>
                     <div class="game_image">
-                        this is the image
-                        <!-- <img
-                            src="<?= htmlspecialchars($game['cover_image']) ?>"
-                            alt="<?= htmlspecialchars($game['title']) ?>" /> -->
+
+                        <img
+                            src="./asset/images/GTA5.png"
+                            alt="<?= htmlspecialchars($game['title']) ?>" />
                     </div>
                     <p>
                         <small>
@@ -122,11 +123,10 @@ $statement->execute();
                     </div>
                 </div>
             <?php endwhile ?>
-
-            <div id="footer">
-                Copywrong 2025 - No Rights Reserved
-            </div> <!-- END div id="footer" -->
         </div><!-- END div id="all_games" -->
+        <div id="footer">
+            Copywrong 2025 - No Rights Reserved
+        </div> <!-- END div id="footer" -->
     </div><!-- END div id="wrapper" -->
 </body>
 
