@@ -14,11 +14,9 @@
 
     header('HTTP/1.1 401 Unauthorized');
 
-    header('WWW-Authenticate: Basic realm="Our Blog"');
+    header('WWW-Authenticate: Basic realm="Our Game"');
 
     exit("Access Denied: Username and password required.");
   }
-
-
 
   ?>

@@ -7,6 +7,7 @@
 
  ****************/
 
+session_start();
 require('./tools/connect.php');
 
 // Define valid sorting options
@@ -62,6 +63,21 @@ $statement->execute();
             <li><a href="index.php" class='active'>Home</a></li>
             <li><a href="./games/post.php">Add New Game</a></li>
             <li><a href="./categories/manage_categories.php">Manage Categories</a></li>
+            <?php if (isset($_SESSION['username'])): ?>
+                <!-- Login user display -->
+                <li class="user-info">
+                    Welcome, <?= htmlspecialchars($_SESSION['username']) ?>
+                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                        <span class="admin-badge">(Admin)</span>
+                    <?php endif; ?>
+                </li>
+                <li><a href="./users/logout.php">Logout</a></li>
+            <?php else: ?>
+                <!-- Unlogin user display -->
+                <li><a href="./users/register.php">Register</a></li>
+                <li><a href="./users/login.php">Login</a></li>
+            <?php endif; ?>
+        </ul>
         </ul> <!-- END div id="menu" -->
 
         <div class="sort-options">
