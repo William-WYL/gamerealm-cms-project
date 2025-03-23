@@ -61,8 +61,10 @@ $statement->execute();
         </div> <!-- END div id="header" -->
         <ul id="menu">
             <li><a href="index.php" class='active'>Home</a></li>
-            <li><a href="./games/post.php">Add New Game</a></li>
-            <li><a href="./categories/manage_categories.php">Manage Categories</a></li>
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                <li><a href="./games/post.php">Add New Game</a></li>
+                <li><a href="./categories/manage_categories.php">Manage Categories</a></li>
+            <?php endif; ?>
             <?php if (isset($_SESSION['username'])): ?>
                 <!-- Login user display -->
                 <li class="user-info">
@@ -71,29 +73,30 @@ $statement->execute();
                         <span class="admin-badge">(Admin)</span>
                     <?php endif; ?>
                 </li>
-                <li><a href="./users/logout.php">Logout</a></li>
+                <li class="user-function"><a href="./users/logout.php">Logout</a></li>
             <?php else: ?>
                 <!-- Unlogin user display -->
-                <li><a href="./users/register.php">Register</a></li>
-                <li><a href="./users/login.php">Login</a></li>
+                <li class="user-function"><a href="./users/register.php">Register</a></li>
+                <li class="user-function"><a href="./users/login.php">Login</a></li>
             <?php endif; ?>
         </ul>
         </ul> <!-- END div id="menu" -->
-
-        <div class="sort-options">
-            <ul id="menu">
-                <span>Sort by:</span>
-                <small>
-                    <li><a href="index.php?sort=title" class="<?= $sort == 'title' ? 'active' : '' ?>">Title</a></li>
-                </small>
-                <small>
-                    <li><a href="index.php?sort=category" class="<?= $sort == 'category' ? 'active' : '' ?>">Category</a></li>
-                </small>
-                <small>
-                    <li><a href="index.php?sort=date" class="<?= $sort == 'date' ? 'active' : '' ?>">Release Date</a></li>
-                </small>
-            </ul>
-        </div>
+        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+            <div class="sort-options">
+                <ul id="menu">
+                    <span>Sort by:</span>
+                    <small>
+                        <li><a href="index.php?sort=title" class="<?= $sort == 'title' ? 'active' : '' ?>">Title</a></li>
+                    </small>
+                    <small>
+                        <li><a href="index.php?sort=category" class="<?= $sort == 'category' ? 'active' : '' ?>">Category</a></li>
+                    </small>
+                    <small>
+                        <li><a href="index.php?sort=date" class="<?= $sort == 'date' ? 'active' : '' ?>">Release Date</a></li>
+                    </small>
+                </ul>
+            </div>
+        <?php endif; ?>
 
         <div id="all_games">
             <?php while ($game = $statement->fetch()): ?>

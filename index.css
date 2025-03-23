@@ -28,15 +28,3 @@
   flex-direction: column;
   justify-content: center;
 }
-
-.user-info {
-  color: #fff;
-  padding: 5px;
-  background: #d4d2d2;
-  border-radius: 4px;
-}
-
-.admin-badge {
-  color: #ff9900;
-  font-size: 0.8em;
-}

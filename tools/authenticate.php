@@ -1,22 +1,27 @@
- <?php
+<?php
+// authenticate.php
 
-  define('ADMIN_LOGIN', 'gradmin');
+/**
+ * Admin Access Control
+ * - Verifies admin status via session
+ * - Redirects non-admin users to login
+ */
 
-  define('ADMIN_PASSWORD', 'grpass');
+// Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
 
-  if (
-    !isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])
+// Verify admin session
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+  // Clear any existing session data
+  $_SESSION = array();
 
-    || ($_SERVER['PHP_AUTH_USER'] != ADMIN_LOGIN)
+  // Send forbidden status and redirect
+  header('HTTP/1.1 403 Forbidden');
+  header('Location: login.php');
+  exit('Access Denied: Administrator privileges required');
+}
 
-    || ($_SERVER['PHP_AUTH_PW'] != ADMIN_PASSWORD)
-  ) {
-
-    header('HTTP/1.1 401 Unauthorized');
-
-    header('WWW-Authenticate: Basic realm="Our Game"');
-
-    exit("Access Denied: Username and password required.");
-  }
-
-  ?>
+?>
+<!-- End -->

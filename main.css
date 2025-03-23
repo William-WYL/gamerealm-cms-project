@@ -71,6 +71,7 @@ ul#menu li a:hover {
   color: black;
 }
 
+
 div#all_games {
   border: 2px solid grey;
   padding: 0 10px 10px 10px;
@@ -86,4 +87,26 @@ h2 {
 div#footer {
   text-align: right;
   margin-top: 10px;
+}
+
+.user-info {
+  color: #fff;
+  padding: 5px;
+  background: #1002025f;
+  border-radius: 4px;
+}
+
+.admin-badge {
+  color: #ff9900;
+  font-size: 0.8em;
+}
+
+.user-function {
+  border: none;
+  /* background-color: pink; */
+}
+
+ul#menu li.user-function a {
+  border: none;
+  text-decoration: none;
 }
