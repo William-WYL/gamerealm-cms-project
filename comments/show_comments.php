@@ -4,115 +4,136 @@
     
     Name: Wei Wang
     Date: February 6, 2025
-    Description: Display a single game post with comments.
+    Description: Display a single game post with user comments.
 
  ****************/
 
 require('../tools/connect.php');
 
-// Validate the game ID
+// Validate game ID from query parameters
 if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
-  header("refresh:1; URL=../index.php");
-  die("Invalid game post ID."); // Stop execution if the ID is missing or invalid
+  header("Location: ../index.php");
+  exit("Invalid game ID.");
 }
 
-$id = $_GET['id'];
+$game_id = $_GET['id'];
 
-// Fetch the game post by ID with its category name
+// Retrieve game details with category information
 $gameQuery = "
-    SELECT g.*, c.category_name 
+    SELECT 
+        g.id, 
+        g.title, 
+        g.description, 
+        g.release_date, 
+        g.cover_image,
+        c.category_name
     FROM games g
     LEFT JOIN categories c ON g.category_id = c.category_id
-    WHERE g.id = :id
+    WHERE g.id = :game_id
 ";
-$gameStatement = $db->prepare($gameQuery);
-$gameStatement->bindValue(':id', $id, PDO::PARAM_INT);
-$gameStatement->execute();
-$game = $gameStatement->fetch(PDO::FETCH_ASSOC);
 
-// If no game post is found, display an error message
-if (!$game) {
-  header("refresh:1; URL=../index.php");
-  die("Game post not found.");
+try {
+  $gameStatement = $db->prepare($gameQuery);
+  $gameStatement->bindValue(':game_id', $game_id, PDO::PARAM_INT);
+  $gameStatement->execute();
+  $game = $gameStatement->fetch(PDO::FETCH_ASSOC);
+
+  if (!$game) {
+    header("Location: ../index.php");
+    exit("Game not found.");
+  }
+} catch (PDOException $e) {
+  die("Database error: " . $e->getMessage());
 }
 
-// Fetch comments for the current game
-$commentQuery = "SELECT * FROM comments WHERE game_id = :game_id ORDER BY created_at DESC";
-$commentStatement = $db->prepare($commentQuery);
-$commentStatement->bindValue(':game_id', $id, PDO::PARAM_INT);
-$commentStatement->execute();
-$comments = $commentStatement->fetchAll(PDO::FETCH_ASSOC);
+// Retrieve comments with user information
+$commentQuery = "
+    SELECT 
+        cm.content,
+        cm.created_at,
+        u.username,
+        u.role
+    FROM comments cm
+    JOIN users u ON cm.user_id = u.id
+    WHERE cm.game_id = :game_id
+    ORDER BY cm.created_at DESC
+";
+
+try {
+  $commentStatement = $db->prepare($commentQuery);
+  $commentStatement->bindValue(':game_id', $game_id, PDO::PARAM_INT);
+  $commentStatement->execute();
+  $comments = $commentStatement->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+  die("Database error: " . $e->getMessage());
+}
 
 ?>
 
-<!-- Full Game Post -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <title>GameRealm - <?= htmlspecialchars($game['title']) ?></title>
-  <link rel="stylesheet" href="../main.css" type="text/css">
+  <link rel="stylesheet" href="../main.css">
 </head>
 
 <body>
   <div id="wrapper">
     <div id="header">
-      <h1><a href="../index.php">GameRealm - <?= htmlspecialchars($game['title']) ?></a></h1>
-    </div> <!-- END div id="header" -->
-    <ul id="menu">
-      <li><a href="../index.php">Home</a></li>
-    </ul> <!-- END div id="menu" -->
-    <div id="all_games">
-      <div class="game_post">
-        <h2><?= htmlspecialchars($game['title']) ?></h2>
-        <p>
-          <small>
-            Release Date:
-            <?= date("F j, Y, g:i a", strtotime($game['release_date'])) ?>
-          </small>
-        </p>
-        <p>
-          <small>
-            ID: <?= htmlspecialchars($game['id']) ?>
-            <a href="../games/edit.php?id=<?= htmlspecialchars($game['id']) ?>">Edit/Delete</a>
-          </small>
-        </p>
-        <div class='game_category'>
-          <small>
-            Category:
-            <?= !empty($game['category_name']) ? htmlspecialchars($game['category_name']) : 'Uncategorized' ?>
-          </small>
-        </div>
-        <div class='game_description'>
-          <small>
-            Description: <?= htmlspecialchars($game['description']) ?>
-          </small>
-        </div>
+      <h1><a href="../index.php"><?= htmlspecialchars($game['title']) ?></a></h1>
+    </div>
 
-        <!-- Display Comments -->
-        <div id="comments">
-          <h3>Comments</h3>
-          <?php if (!empty($comments)): ?>
-            <ul>
-              <?php foreach ($comments as $comment): ?>
-                <li>
-                  <strong><?= htmlspecialchars($comment['username']) ?></strong>
-                  <span><?= date("F j, Y, g:i a", strtotime($comment['created_at'])) ?></span>
-                  <p><?= htmlspecialchars($comment['content']) ?></p>
-                </li>
-              <?php endforeach; ?>
-            </ul>
-          <?php else: ?>
-            <p>No comments yet. Be the first to comment!</p>
-          <?php endif; ?>
-        </div>
+    <!-- Game Details Section -->
+    <div class="game-post">
+      <img src="../asset/images/<?= htmlspecialchars($game['cover_image']) ?>"
+        alt="<?= htmlspecialchars($game['title']) ?> Cover">
+
+      <div class="game-meta">
+        <p>Released: <?= date("F j, Y", strtotime($game['release_date'])) ?></p>
+        <p>Category: <?= htmlspecialchars($game['category_name'] ?? 'Uncategorized') ?></p>
+      </div>
+
+      <div class="game-description">
+        <?= htmlspecialchars($game['description']) ?>
       </div>
     </div>
+
+    <!-- Comments Section -->
+    <div class="comments-section">
+      <h2>Player Discussions</h2>
+
+      <?php if (!empty($comments)): ?>
+        <div class="comments-list">
+          <?php foreach ($comments as $comment): ?>
+            <div class="comment">
+              <div class="comment-header">
+                <span class="user-name">
+                  <?= htmlspecialchars($comment['username']) ?>
+                  <?php if ($comment['role'] === 'admin'): ?>
+                    <span class="admin-badge">(Admin)</span>
+                  <?php endif; ?>
+                </span>
+                <span class="comment-date">
+                  <?= date("M j, Y g:i a", strtotime($comment['created_at'])) ?>
+                </span>
+              </div>
+              <div class="comment-content">
+                <?= htmlspecialchars($comment['content']) ?>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      <?php else: ?>
+        <p class="no-comments">Be the first to discuss this game!</p>
+      <?php endif; ?>
+    </div>
+
     <div id="footer">
-      Copywrong 2025 - No Rights Reserved
-    </div> <!-- END div id="footer" -->
-  </div> <!-- END div id="wrapper" -->
+      © GameRealm 2025 - All virtual rights reserved
+    </div>
+  </div>
 </body>
 
 </html>

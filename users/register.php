@@ -1,3 +1,5 @@
+<!-- register.php -->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,7 +22,7 @@
       <li><a href="login.php">Login</a></li>
     </ul> <!-- END div id="menu" -->
     <div id="user_register">
-      <form action="process_register.php" method="POST">
+      <form action="process_register.php" method="POST" onsubmit="return validatePasswords()">
         <label>User Name: </label>
         <input type="text" name="username" required><br>
 
@@ -28,7 +30,12 @@
         <input type="email" name="email" required><br>
 
         <label>Password：</label>
-        <input type="password" name="password" minlength="8" placeholder="Password must be at least 8 characters."><br>
+        <input type="password" name="password" id="password" minlength="8" placeholder="More than 8 characters" required><br>
+
+        <label>Confirm Password：</label>
+        <input type="password" name="password_confirm" id="password_confirm" minlength="8" placeholder="Two passwords must match" required><br>
+
+        <div id="passwordError" style="color:red; display:none;"></div>
 
         <button type="submit">Submit</button>
         <button type="reset">Reset</button>
@@ -38,6 +45,24 @@
       Copywrong 2025 - No Rights Reserved
     </div> <!-- END div id="footer" -->
   </div> <!-- END div id="wrapper" -->
+
+  <!-- Using JS to handle password confimation, avoid backend handling -->
+  <script>
+    function validatePasswords() {
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('password_confirm').value;
+      const errorDiv = document.getElementById('passwordError');
+
+      if (password !== confirmPassword) {
+        errorDiv.textContent = "Passwords do not match!";
+        errorDiv.style.display = 'block';
+        return false; // Prevent form submition
+      }
+
+      errorDiv.style.display = 'none';
+      return true; // Allow form submition
+    }
+  </script>
 </body>
 
 </html>

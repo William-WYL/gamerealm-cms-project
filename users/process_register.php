@@ -1,3 +1,4 @@
+<!-- process_register.php -->
 <?php
 require_once '../tools/connect.php';
 

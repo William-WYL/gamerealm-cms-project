@@ -15,11 +15,11 @@ if (session_status() === PHP_SESSION_NONE) {
 // Verify admin session
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
   // Clear any existing session data
-  $_SESSION = array();
+  // $_SESSION = array();
 
   // Send forbidden status and redirect
-  header('HTTP/1.1 403 Forbidden');
-  header('Location: login.php');
+  // header('HTTP/1.1 403 Forbidden');
+  header('Location: ../users/login.php');
   exit('Access Denied: Administrator privileges required');
 }
 
