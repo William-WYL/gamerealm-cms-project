@@ -22,6 +22,5 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
   header('Location: ../users/login.php');
   exit('Access Denied: Administrator privileges required');
 }
-
 ?>
 <!-- End -->

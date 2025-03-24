@@ -15,11 +15,11 @@
 <body>
   <div id="wrapper">
     <div id="header">
-      <h1><a href="../index.php">GameRealm - Register</a></h1>
+      <h1><a href="../index.php">GameRealm - Sign Up</a></h1>
     </div> <!-- END div id="header" -->
     <ul id="menu">
       <li><a href="../index.php">Home</a></li>
-      <li><a href="login.php">Login</a></li>
+      <li class="user-function"><a href="login.php">Log in</a></li>
     </ul> <!-- END div id="menu" -->
     <div id="user_register">
       <form action="process_register.php" method="POST" onsubmit="return validatePasswords()">

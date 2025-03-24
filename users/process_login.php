@@ -17,7 +17,8 @@ if (empty($email) || empty($password)) {
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-  die("Invalid email format");
+  echo "Invalid email format";
+  exit;
 }
 
 try {
@@ -33,7 +34,8 @@ try {
 
   if (!$user || !password_verify($password, $user['password'])) {
     error_log("Failed login attempt for email: $email");
-    die("Invalid email or password");
+    echo "Invalid email or password";
+    exit;
   }
 
   // Regenerate session ID to prevent fixation
@@ -45,7 +47,7 @@ try {
   $_SESSION['role'] = $user['role'];
   $_SESSION['last_login'] = time();
 
-  // Redirect to dashboard
+  // Redirect to index.php on which you can see you user name
   header('Location: ../index.php');
   exit();
 } catch (PDOException $e) {

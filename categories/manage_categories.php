@@ -21,6 +21,7 @@ require('../tools/authenticate.php');
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../main.css">
+  <link rel="stylesheet" href="category.css">
   <title>Add New Game - GameRealm</title>
 </head>
 
@@ -48,13 +49,7 @@ require('../tools/authenticate.php');
         <li class="user-function"><a href="./users/login.php">Login</a></li>
       <?php endif; ?>
     </ul> <!-- END div id="menu" -->
-    <?php if (isset($_GET['success'])): ?>
-      <div class="success"><?= htmlspecialchars($_GET['success']) ?></div>
-    <?php endif; ?>
 
-    <?php if (isset($_GET['error'])): ?>
-      <div class="error"><?= htmlspecialchars($_GET['error']) ?></div>
-    <?php endif; ?>
     <div id="create_categories">
       <form action="process_category.php" method="post">
         <fieldset>
@@ -65,6 +60,13 @@ require('../tools/authenticate.php');
         </fieldset>
       </form>
     </div>
+    <?php if (isset($_GET['success'])): ?>
+      <div class="success"><?= htmlspecialchars($_GET['success']) ?></div>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['error'])): ?>
+      <div class="error"><?= htmlspecialchars($_GET['error']) ?></div>
+    <?php endif; ?>
     <!-- category list -->
     <div id="category_list">
 
@@ -90,6 +92,7 @@ require('../tools/authenticate.php');
       Copywrong 2025 - No Rights Reserved
     </div> <!-- END div id="footer" -->
   </div> <!-- END div id="wrapper" -->
+
 </body>
 
 </html>

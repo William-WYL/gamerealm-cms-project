@@ -61,6 +61,7 @@ $statement->execute();
         </div> <!-- END div id="header" -->
         <ul id="menu">
             <li><a href="index.php" class='active'>Home</a></li>
+            <!-- Only shown to admin -->
             <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                 <li><a href="./games/post.php">Add New Game</a></li>
                 <li><a href="./categories/manage_categories.php">Manage Categories</a></li>
@@ -76,8 +77,8 @@ $statement->execute();
                 <li class="user-function"><a href="./users/logout.php">Logout</a></li>
             <?php else: ?>
                 <!-- Unlogin user display -->
-                <li class="user-function"><a href="./users/register.php">Register</a></li>
-                <li class="user-function"><a href="./users/login.php">Login</a></li>
+                <li class="user-function"><a href="./users/register.php">Sign up</a></li>
+                <li class="user-function"><a href="./users/login.php">Log in</a></li>
             <?php endif; ?>
         </ul>
         </ul> <!-- END div id="menu" -->
@@ -111,18 +112,16 @@ $statement->execute();
                             src="./asset/images/<?= htmlspecialchars($game['cover_image']) ?>"
                             alt="<?= htmlspecialchars($game['title']) ?>" />
                     </div>
-                    <p>
-                        <small>
-                            Release Date:
-                            <?= date("F j, Y", strtotime($game['release_date'])) ?>
-                        </small>
-                    </p>
-                    <p>
-                        <small>
-                            ID: <?= htmlspecialchars($game['id']) ?>
-                            <a href="games/edit.php?id=<?= htmlspecialchars($game['id']) ?>">edit/delete</a>
-                        </small>
-                    </p>
+
+                    <!-- Only shown to admin -->
+                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                        <p>
+                            <small>
+                                ID: <?= htmlspecialchars($game['id']) ?>
+                                <a href="games/edit.php?id=<?= htmlspecialchars($game['id']) ?>">edit/delete</a>
+                            </small>
+                        </p>
+                    <?php endif; ?>
                     <div class='game_category'>
                         <small>
                             Category:
@@ -131,7 +130,13 @@ $statement->execute();
                     </div>
                     <div class='game_description'>
                         <small>
-                            Description: <?= htmlspecialchars($game['description']) ?>
+                            <?= htmlspecialchars($game['description']) ?>
+                        </small>
+                    </div>
+                    <div>
+                        <small>
+                            Release Date:
+                            <?= date("F j, Y", strtotime($game['release_date'])) ?>
                         </small>
                     </div>
                     <div>

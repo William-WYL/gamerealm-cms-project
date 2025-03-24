@@ -7,7 +7,7 @@
     Description: Display a single game post with user comments.
 
  ****************/
-
+session_start();
 require('../tools/connect.php');
 
 // Validate game ID from query parameters
@@ -84,6 +84,23 @@ try {
     <div id="header">
       <h1><a href="../index.php"><?= htmlspecialchars($game['title']) ?></a></h1>
     </div>
+    <ul id="menu">
+      <li><a href="../index.php">Home</a></li>
+      <?php if (isset($_SESSION['username'])): ?>
+        <!-- Login user display -->
+        <li class="user-info">
+          Welcome, <?= htmlspecialchars($_SESSION['username']) ?>
+          <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+            <span class="admin-badge">(Admin)</span>
+          <?php endif; ?>
+        </li>
+        <li class="user-function"><a href="../users/logout.php">Logout</a></li>
+      <?php else: ?>
+        <!-- Unlogin user display -->
+        <li class="user-function"><a href="../users/register.php">Register</a></li>
+        <li class="user-function"><a href="../users/login.php">Login</a></li>
+      <?php endif; ?>
+    </ul> <!-- END div id="menu" -->
 
     <!-- Game Details Section -->
     <div class="game-post">

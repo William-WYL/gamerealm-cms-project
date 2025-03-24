@@ -129,7 +129,7 @@ try {
   header("Location: manage_categories.php?error=Database operation failed");
   exit;
 } catch (Exception $e) {
-  $db->rollBack();
+  // $db->rollBack();
   header("Location: manage_categories.php?error=" . urlencode($e->getMessage()));
   exit;
 }
