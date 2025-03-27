@@ -5,37 +5,66 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - GameRealm</title>
-  <link rel="stylesheet" href="../main.css">
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../general.css">
 </head>
 
 <body>
-  <div id="wrapper">
-    <div id="header">
-      <h1><a href="../index.php">GameRealm - Log in</a></h1>
+  <div class="container">
+    <div class="py-4 text-start">
+      <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm - Log in</a></h1>
     </div>
 
-    <ul id="menu">
-      <li><a href="../index.php">Home</a></li>
-      <li class="user-function"><a href="register.php">Sign up</a></li>
-    </ul>
+    <!-- Navigation Bar -->
+    <nav id="menu" class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-2">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="../index.php">Home</a></li>
+          </ul>
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="register.php">Sign up</a></li>
+            <li class="nav-item"><a class="nav-link active" href="login.php">Log in</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
-    <div id="login_form">
-      <form action="process_login.php" method="POST">
-        <label>Email:</label>
-        <input type="email" name="email" required placeholder="Please enter a valid email"><br>
+    <!-- Login Form Section -->
+    <div id="login_form" class="container mt-5 mb-5">
+      <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+          <h4 class="text-center mb-4">Log in to Your Account</h4>
+          <form action="process_login.php" method="POST">
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control shadow-sm" id="email" name="email" required placeholder="Please enter a valid email">
+            </div>
 
-        <label>Password:</label>
-        <input type="password" name="password" required><br>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control shadow-sm" id="password" name="password" required placeholder="Enter your password">
+            </div>
 
-        <button type="submit">Login</button>
-      </form>
-    </div>
+            <div class="d-flex justify-content-center gap-3">
+              <button type="submit" class="btn btn-primary btn-lg px-4">Login</button>
+            </div>
+          </form>
+        </div> <!-- End of form column -->
+      </div> <!-- End of row -->
+    </div> <!-- End of login_form container -->
 
-    <div id="footer">
-      Copywrong 2025 - No Rights Reserved
-    </div>
-  </div>
+    <!-- Footer Section -->
+    <div id="footer" class="text-center py-4 mt-5">
+      <p>&copy; 2025 GameRealm - All Rights Reserved</p>
+    </div> <!-- END div id="footer" -->
+  </div> <!-- END div container -->
+
+  <!-- Bootstrap JS (Optional for any form validation or interactive components) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

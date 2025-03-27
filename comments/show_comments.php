@@ -76,81 +76,92 @@ try {
 <head>
   <meta charset="UTF-8">
   <title>GameRealm - <?= htmlspecialchars($game['title']) ?></title>
-  <link rel="stylesheet" href="../main.css">
+  <!-- Bootstrap CSS -->
+  <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
-  <div id="wrapper">
-    <div id="header">
-      <h1><a href="../index.php"><?= htmlspecialchars($game['title']) ?></a></h1>
+  <div class="container">
+    <div class="py-4 text-center">
+      <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm - Add New Game</a></h1>
     </div>
-    <ul id="menu">
-      <li><a href="../index.php">Home</a></li>
-      <?php if (isset($_SESSION['username'])): ?>
-        <!-- Login user display -->
-        <li class="user-info">
-          Welcome, <?= htmlspecialchars($_SESSION['username']) ?>
-          <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-            <span class="admin-badge">(Admin)</span>
-          <?php endif; ?>
-        </li>
-        <li class="user-function"><a href="../users/logout.php">Logout</a></li>
-      <?php else: ?>
-        <!-- Unlogin user display -->
-        <li class="user-function"><a href="../users/register.php">Register</a></li>
-        <li class="user-function"><a href="../users/login.php">Login</a></li>
-      <?php endif; ?>
-    </ul> <!-- END div id="menu" -->
+
+    <nav id="menu" class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-2">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="../index.php">Home</a></li>
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+              <li class="nav-item active"><a class="nav-link active" href="post.php">Add Game</a></li>
+              <li class="nav-item"><a class="nav-link" href="../categories/manage_categories.php">Categories</a></li>
+              <li class="nav-item"><a class="nav-link" href="../users/manage_users.php">Users</a></li>
+              <li class="nav-item"><a class="nav-link" href="../comments/manage_comments.php">Comments</a></li>
+            <?php endif; ?>
+          </ul>
+          <ul class="navbar-nav ms-auto">
+            <?php if (isset($_SESSION['username'])): ?>
+              <li class="nav-item">
+                <span class="nav-link text-primary">Welcome, <?= htmlspecialchars($_SESSION['username']) ?>
+                  <?php if ($_SESSION['role'] === 'admin'): ?>
+                    <span class="admin-badge text-warning">(Admin)</span>
+                  <?php endif; ?>
+                </span>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="./users/logout.php">Logout</a></li>
+            <?php else: ?>
+              <li class="nav-item"><a class="nav-link" href="./users/register.php">Sign up</a></li>
+              <li class="nav-item"><a class="nav-link" href="./users/login.php">Log in</a></li>
+            <?php endif; ?>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
     <!-- Game Details Section -->
-    <div class="game-post">
-      <img src="../asset/images/<?= htmlspecialchars($game['cover_image']) ?>"
-        alt="<?= htmlspecialchars($game['title']) ?> Cover">
-
-      <div class="game-meta">
-        <p>Released: <?= date("F j, Y", strtotime($game['release_date'])) ?></p>
-        <p>Category: <?= htmlspecialchars($game['category_name'] ?? 'Uncategorized') ?></p>
-      </div>
-
-      <div class="game-description">
-        <?= htmlspecialchars($game['description']) ?>
+    <div class="row justify-content-start border-bottom mb-2">
+      <div class="col-md-6 text-start">
+        <img src="../asset/images/<?= htmlspecialchars($game['cover_image']) ?>" class="img-fluid mb-4" alt="<?= htmlspecialchars($game['title']) ?> Cover">
+        <h5 class="mb-3"><?= htmlspecialchars($game['title']) ?></h5>
+        <p><strong>Released:</strong> <?= date("F j, Y", strtotime($game['release_date'])) ?></p>
+        <p><strong>Category:</strong> <?= htmlspecialchars($game['category_name'] ?? 'Uncategorized') ?></p>
+        <p><?= nl2br(htmlspecialchars($game['description'])) ?></p>
       </div>
     </div>
+
 
     <!-- Comments Section -->
     <div class="comments-section">
-      <h2>Player Discussions</h2>
+      <h5 class="mb-4">Player Discussions</h5>
 
       <?php if (!empty($comments)): ?>
-        <div class="comments-list">
+        <div class="list-group">
           <?php foreach ($comments as $comment): ?>
-            <div class="comment">
-              <div class="comment-header">
-                <span class="user-name">
-                  <?= htmlspecialchars($comment['username']) ?>
+            <div class="list-group-item">
+              <div class="d-flex justify-content-between">
+                <span class="fw-bold"><?= htmlspecialchars($comment['username']) ?>
                   <?php if ($comment['role'] === 'admin'): ?>
-                    <span class="admin-badge">(Admin)</span>
+                    <span class="badge bg-warning">(Admin)</span>
                   <?php endif; ?>
                 </span>
-                <span class="comment-date">
-                  <?= date("M j, Y g:i a", strtotime($comment['created_at'])) ?>
-                </span>
+                <span class="text-muted"><?= date("M j, Y g:i a", strtotime($comment['created_at'])) ?></span>
               </div>
-              <div class="comment-content">
-                <?= htmlspecialchars($comment['content']) ?>
-              </div>
+              <p class="mt-2"><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
             </div>
           <?php endforeach; ?>
         </div>
       <?php else: ?>
-        <p class="no-comments">Be the first to discuss this game!</p>
+        <p class="text-start text-muted">Be the first to discuss this game!</p>
       <?php endif; ?>
     </div>
 
-    <div id="footer">
-      © GameRealm 2025 - All virtual rights reserved
-    </div>
-  </div>
+    <footer class="text-center mt-5">
+      <p class="small text-muted">© GameRealm 2025 - All virtual rights reserved</p>
+    </footer>
+  </div> <!-- End Container -->
 </body>
 
 </html>
