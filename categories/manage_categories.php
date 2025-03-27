@@ -34,6 +34,8 @@ require('../tools/authenticate.php');
       <li><a href="../index.php">Home</a></li>
       <li><a href="../games/post.php">Add New Game</a></li>
       <li><a href="manage_categories.php" class='active'>Manage Categories</a></li>
+      <li><a href="../users/manage_users.php">Manage Users</a></li>
+      <li><a href="../comments/manage_comments.php">Manage Comments</a></li>
       <?php if (isset($_SESSION['username'])): ?>
         <!-- Login user display -->
         <li class="user-info">
@@ -42,11 +44,11 @@ require('../tools/authenticate.php');
             <span class="admin-badge">(Admin)</span>
           <?php endif; ?>
         </li>
-        <li class="user-function"><a href="./users/logout.php">Logout</a></li>
+        <li class="user-function"><a href="../users/logout.php">Logout</a></li>
       <?php else: ?>
         <!-- Unlogin user display -->
-        <li class="user-function"><a href="./users/register.php">Register</a></li>
-        <li class="user-function"><a href="./users/login.php">Login</a></li>
+        <li class="user-function"><a href="../users/register.php">Sign up</a></li>
+        <li class="user-function"><a href="../users/login.php">Log in</a></li>
       <?php endif; ?>
     </ul> <!-- END div id="menu" -->
 

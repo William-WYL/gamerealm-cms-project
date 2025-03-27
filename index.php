@@ -51,6 +51,8 @@ $statement->execute();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="main.css" type="text/css">
     <link rel="stylesheet" href="index.css" type="text/css">
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <title>Welcome to GameRealm!</title>
 </head>
 
@@ -65,6 +67,8 @@ $statement->execute();
             <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                 <li><a href="./games/post.php">Add New Game</a></li>
                 <li><a href="./categories/manage_categories.php">Manage Categories</a></li>
+                <li><a href="./users/manage_users.php">Manage Users</a></li>
+                <li><a href="./comments/manage_comments.php">Manage Comments</a></li>
             <?php endif; ?>
             <?php if (isset($_SESSION['username'])): ?>
                 <!-- Login user display -->

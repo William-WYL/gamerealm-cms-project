@@ -5,7 +5,7 @@ session_start();
 // Resect session
 $_SESSION = array();
 
-// Delete dession cookies
+// Delete session cookies
 if (ini_get("session.use_cookies")) {
   $params = session_get_cookie_params();
   setcookie(

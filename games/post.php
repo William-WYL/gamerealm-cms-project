@@ -40,6 +40,8 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
             <li><a href="../index.php">Home</a></li>
             <li><a href="post.php" class='active'>Add New Game</a></li>
             <li><a href="../categories/manage_categories.php">Manage Categories</a></li>
+            <li><a href="../users/manage_users.php">Manage Users</a></li>
+            <li><a href="../comments/manage_comments.php">Manage Comments</a></li>
             <?php if (isset($_SESSION['username'])): ?>
                 <!-- Login user display -->
                 <li class="user-info">
@@ -48,11 +50,11 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
                         <span class="admin-badge">(Admin)</span>
                     <?php endif; ?>
                 </li>
-                <li class="user-function"><a href="./users/logout.php">Logout</a></li>
+                <li class="user-function"><a href="../users/logout.php">Logout</a></li>
             <?php else: ?>
                 <!-- Unlogin user display -->
-                <li class="user-function"><a href="./users/register.php">Register</a></li>
-                <li class="user-function"><a href="./users/login.php">Login</a></li>
+                <li class="user-function"><a href="../users/register.php">Register</a></li>
+                <li class="user-function"><a href="../users/login.php">Login</a></li>
             <?php endif; ?>
         </ul> <!-- END div id="menu" -->
         <div id="all_games">
