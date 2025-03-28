@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Sanitize inputs
-$email = trim(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
+$email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
 $password = $_POST['password'];
 
 // Validate inputs

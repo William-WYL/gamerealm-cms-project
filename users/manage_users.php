@@ -16,34 +16,29 @@ require('../tools/authenticate.php');
 $searchConditions = [];
 $params = [];
 
-// Add search condition for id if provided
 if (!empty($_GET['id'])) {
   $searchConditions[] = "id = :id";
   $params[':id'] = $_GET['id'];
 }
 
-// Add search condition for username if provided
 if (!empty($_GET['username'])) {
   $searchConditions[] = "username LIKE :username";
   $params[':username'] = '%' . $_GET['username'] . '%';
 }
 
-// Add search condition for email if provided
 if (!empty($_GET['email'])) {
-  $searchConditions[] = "email LIKE :email"; // Add condition for email
-  $params[':email'] = '%' . $_GET['email'] . '%'; // Bind email parameter with LIKE query
+  $searchConditions[] = "email LIKE :email";
+  $params[':email'] = '%' . $_GET['email'] . '%';
 }
 
-// Add search condition for role if provided
 if (!empty($_GET['role'])) {
-  $searchConditions[] = "role = :role"; // Add condition for role
-  $params[':role'] = $_GET['role']; // Bind role parameter
+  $searchConditions[] = "role = :role";
+  $params[':role'] = $_GET['role'];
 }
 
-// Build the SQL query for selecting users
 $query = "SELECT * FROM users";
 if (!empty($searchConditions)) {
-  $query .= " WHERE " . implode(" AND ", $searchConditions); // Add conditions if search parameters are provided
+  $query .= " WHERE " . implode(" AND ", $searchConditions);
 }
 $query .= " ORDER BY id"; // Order the results by id
 
@@ -55,6 +50,26 @@ foreach ($params as $key => $value) {
 $statement->execute(); // Execute the query
 $users = $statement->fetchAll(); // Fetch all results
 
+// Pagination logic
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$limit = 3; // temp
+$offset = ($page - 1) * $limit;
+
+$totalQuery = "SELECT COUNT(*) FROM users";
+$totalStatement = $db->prepare($totalQuery);
+$totalStatement->execute();
+$totalUsers = $totalStatement->fetchColumn();
+$totalPages = ceil($totalUsers / $limit);
+
+$query .= " LIMIT :limit OFFSET :offset";
+$statement = $db->prepare($query);
+foreach ($params as $key => $value) {
+  $statement->bindValue($key, $value);
+}
+$statement->bindValue(':limit', $limit, PDO::PARAM_INT);
+$statement->bindValue(':offset', $offset, PDO::PARAM_INT);
+$statement->execute();
+$users = $statement->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -224,6 +239,25 @@ $users = $statement->fetchAll(); // Fetch all results
         </fieldset>
       </div>
     </div>
+
+    <!-- Pagination Navigation -->
+    <?php if ($totalUsers > $limit): ?>
+      <nav class="pagination justify-content-center mt-3">
+        <ul class="pagination">
+          <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
+            <a class="page-link" href="?page=<?= $page - 1 ?>">Prev</a>
+          </li>
+          <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+            <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
+              <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+            </li>
+          <?php endfor; ?>
+          <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
+            <a class="page-link" href="?page=<?= $page + 1 ?>">Next</a>
+          </li>
+        </ul>
+      </nav>
+    <?php endif; ?>
 
     <!-- Footer Section -->
     <div id="footer" class="text-center py-4 mt-5">

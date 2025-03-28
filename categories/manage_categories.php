@@ -23,13 +23,13 @@ require('../tools/authenticate.php');
   <link rel="stylesheet" href="../general.css">
   <link rel="stylesheet" href="category.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <title>Add New Game - GameRealm</title>
+  <title>Manage Categories - GameRealm</title>
 </head>
 
 <body>
   <div class="container">
     <div class="py-4 text-start ">
-      <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm - Add New Game</a></h1>
+      <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm - Manage Categories</a></h1>
     </div>
 
     <nav id="menu" class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-2">

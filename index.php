@@ -14,6 +14,7 @@ require('./tools/connect.php');
 $validSorts = ['title', 'category', 'date'];
 $sort = isset($_GET['sort']) && in_array($_GET['sort'], $validSorts) ? $_GET['sort'] : 'date';
 
+
 // Set the ORDER BY clause based on the selected sort option
 switch ($sort) {
     case 'title':
@@ -28,17 +29,31 @@ switch ($sort) {
         break;
 }
 
+// Page settings
+$gamesPerPage = 9;
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $gamesPerPage;
+
+// Fetch total number of games
+$totalQuery = "SELECT COUNT(*) FROM games";
+$totalStatement = $db->prepare($totalQuery);
+$totalStatement->execute();
+$totalGames = $totalStatement->fetchColumn();
+$totalPages = ceil($totalGames / $gamesPerPage);
+
 // Fetch games with their category names
 $query = "
     SELECT g.*, c.category_name 
     FROM games g
     LEFT JOIN categories c ON g.category_id = c.category_id
     ORDER BY $orderBy 
+    LIMIT :limit OFFSET :offset
 ";
 
 $statement = $db->prepare($query);
+$statement->bindValue(':limit', $gamesPerPage, PDO::PARAM_INT);
+$statement->bindValue(':offset', $offset, PDO::PARAM_INT);
 $statement->execute();
-
 ?>
 
 <!-- Home Page -->
@@ -49,7 +64,6 @@ $statement->execute();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 
     <!-- Bootstrap CSS -->
     <link href="./node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -137,7 +151,16 @@ $statement->execute();
                         <p class="small text-muted">
                             <strong>Category:</strong> <?= !empty($game['category_name']) ? htmlspecialchars($game['category_name']) : 'Uncategorized' ?>
                         </p>
-                        <p class="small"><?= htmlspecialchars($game['description']) ?></p>
+
+                        <!-- Hide the description if it is longer than 50 letters. -->
+                        <div class='blog_content'>
+                            <?php if (strlen($game['description']) > 50): ?>
+                                <!-- Ensure special characters(spaces and line breaks) are displayed correctly in HTML -->
+                                <p class="small"> <?= nl2br(htmlspecialchars(html_entity_decode(substr(html_entity_decode($game['description']), 0, 200)))) ?>...</p>
+                            <?php else: ?>
+                                <p class="small"> <?= nl2br(htmlspecialchars(html_entity_decode($game['description']))) ?> </p>
+                            <?php endif; ?>
+                        </div>
                         <p class="small text-muted"><strong>Release Date:</strong> <?= date("F j, Y", strtotime($game['release_date'])) ?></p>
                         <a href="comments/show_comments.php?id=<?= htmlspecialchars($game['id']) ?>" class="btn btn-sm btn-outline-secondary">Comments</a>
 
@@ -152,6 +175,24 @@ $statement->execute();
                 </div>
             <?php endwhile; ?>
         </div>
+
+        <!-- Pagination -->
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
+                    <a class="page-link text-dark border-dark bg-white" href="?page=<?= $page - 1 ?>">Prev</a>
+                </li>
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
+                        <a class="page-link border-dark <?= ($i == $page) ? 'bg-dark text-white' : 'bg-white text-dark' ?>"
+                            href="index.php?sort=<?= $sort ?>&page=<?= $i ?>"> <?= $i ?> </a>
+                    </li>
+                <?php endfor; ?>
+                <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
+                    <a class="page-link text-dark border-dark bg-white" href="?page=<?= $page + 1 ?>">Next</a>
+                </li>
+            </ul>
+        </nav>
 
         <!-- Footer -->
         <footer class="text-center py-3">

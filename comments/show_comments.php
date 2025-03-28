@@ -19,6 +19,11 @@ if (isset($_SESSION['success'])) {
   unset($_SESSION['success']);
 }
 
+// General input filtering and validation
+function sanitizeInput($input)
+{
+  return filter_input(INPUT_POST, $input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+}
 
 // Validate game ID
 if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
@@ -76,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
     header("Location: show_comments.php?id=" . $game_id);
     exit();
   } else {
-    $content = trim($_POST['content']);
+    $content = trim(sanitizeInput('content'));
 
     if (empty($content)) {
       $_SESSION['error'] = "Comment content cannot be empty.";
@@ -149,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
     // Process update operation
     if ($_POST['action'] === 'update') {
-      $newContent = trim($_POST['content']);
+      $newContent = trim(sanitizeInput('content'));
       if (empty($newContent)) {
         $_SESSION['error'] = "Comment content cannot be empty.";
         header("Location: show_comments.php?id=" . $game_id);
@@ -193,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 <body>
   <div class="container">
     <div class="py-4 text-start">
-      <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm - Add New Game</a></h1>
+      <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm</a></h1>
     </div>
 
     <nav id="menu" class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-2">

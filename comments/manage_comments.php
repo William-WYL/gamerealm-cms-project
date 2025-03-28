@@ -11,6 +11,10 @@
 require('../tools/connect.php');
 require('../tools/authenticate.php');
 
+// Pagination settings
+$limit = 10;
+$page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$offset = ($page - 1) * $limit;
 
 // Build search query
 $searchConditions = [];
@@ -50,15 +54,27 @@ $query = "SELECT c.*, u.username, g.title
 if (!empty($searchConditions)) {
   $query .= " WHERE " . implode(" AND ", $searchConditions);
 }
-$query .= " ORDER BY c.created_at DESC";
+$query .= " ORDER BY c.created_at DESC LIMIT :limit OFFSET :offset";
 
 $statement = $db->prepare($query);
 foreach ($params as $key => $value) {
   $statement->bindValue($key, $value);
 }
+
+$statement->bindValue(':limit', $limit, PDO::PARAM_INT);
+$statement->bindValue(':offset', $offset, PDO::PARAM_INT);
 $statement->execute();
 $comments = $statement->fetchAll();
 
+// Get total count for pagination
+$countQuery = "SELECT COUNT(*) FROM comments" . (!empty($searchConditions) ? " WHERE " . implode(" AND ", $searchConditions) : "");
+$countStatement = $db->prepare($countQuery);
+foreach ($params as $key => $value) {
+  $countStatement->bindValue($key, $value);
+}
+$countStatement->execute();
+$totalComments = $countStatement->fetchColumn();
+$totalPages = ceil($totalComments / $limit);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -74,7 +90,7 @@ $comments = $statement->fetchAll();
 <body>
   <div class="container">
     <div class="py-4 text-start ">
-      <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm - Add New Game</a></h1>
+      <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm -Manage Comments</a></h1>
     </div>
 
     <nav id="menu" class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-2">
@@ -87,9 +103,9 @@ $comments = $statement->fetchAll();
             <li class="nav-item"><a class="nav-link" href="../index.php">Home</a></li>
             <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
               <li class="nav-item"><a class="nav-link " href="../games/post.php">Add Game</a></li>
-              <li class="nav-item active"><a class="nav-link active" href="manage_categories.php">Categories</a></li>
+              <li class="nav-item"><a class="nav-link" href="../categories/manage_categories.php">Categories</a></li>
               <li class="nav-item"><a class="nav-link" href="../users/manage_users.php">Users</a></li>
-              <li class="nav-item"><a class="nav-link" href="../comments/manage_comments.php">Comments</a></li>
+              <li class="nav-item active"><a class="nav-link active" href="manage_comments.php">Comments</a></li>
             <?php endif; ?>
           </ul>
           <ul class="navbar-nav ms-auto">
@@ -196,9 +212,29 @@ $comments = $statement->fetchAll();
             <?php endforeach; ?>
           </tbody>
         </table>
+        <div class="mb-2">Total Comments: <span class="text-info"><?= $totalComments ?></span></div>
+
+        <!-- Pagination Navigation -->
+        <nav class="pagination justify-content-center">
+          <ul class="pagination">
+            <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
+              <a class="page-link" href="?page=<?= $page - 1 ?>">Prev</a>
+            </li>
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+              <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
+                <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+              </li>
+            <?php endfor; ?>
+            <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
+              <a class="page-link" href="?page=<?= $page + 1 ?>">Next</a>
+            </li>
+          </ul>
+        </nav>
+
       </div>
     </div>
   </div>
+
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
