@@ -21,8 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   try {
     switch ($command) {
+      // Task finished:  Validation and Sanitazation
       case 'Update':
-        $content = trim($_POST['content']);
+        $content = trim(filter_input(INPUT_POST, 'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
         $status = $_POST['status'];
 
         if (empty($content)) {
@@ -43,15 +44,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         break;
 
       case 'Delete':
-        // Soft delete example (set status to deleted)
         $stmt = $db->prepare("DELETE FROM comments WHERE id = :id");
         $stmt->execute([':id' => $comment_id]);
         $success = "Comment marked as deleted";
 
-        // Or hard delete:
-        // $stmt = $db->prepare("DELETE FROM comments WHERE id = :id");
-        // $stmt->execute([':id' => $comment_id]);
-        // $success = "Comment permanently deleted";
         break;
 
       default:

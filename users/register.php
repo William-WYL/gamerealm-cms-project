@@ -46,7 +46,7 @@
 
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control shadow-sm" id="email" name="email" required>
+              <input type="email" class="form-control shadow-sm" id="email" name="email" placeholder="Please provide a valid email" required>
             </div>
 
             <div class="mb-3">

@@ -17,6 +17,9 @@ if ($_SESSION['role'] !== 'admin') {
   exit;
 }
 
+
+
+
 $errors = []; // Initialize an empty array to store errors
 $success = ''; // Initialize a variable to store success message
 
@@ -25,15 +28,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $command = $_POST['command'] ?? ''; // Get the command (Create, Update, or Delete)
   $id = $_POST['id'] ?? 0; // Get the user ID if provided
 
+
   try {
     // Switch based on the command
     switch ($command) {
       case 'Create':
         // Validate input data
-        $username = trim($_POST['username']);
-        $email = trim($_POST['email']);
+        $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
         $password = $_POST['password'];
         $role = $_POST['role'];
+
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+          $errors[] = "Invalid email format";
+          break;
+        }
 
         // Check if all fields are provided
         if (empty($username) || empty($email) || empty($password)) {
@@ -66,8 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       case 'Update':
         // Get the updated user data
-        $username = trim($_POST['username']);
-        $email = trim($_POST['email']);
+        $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
         $role = $_POST['role'];
 
         // Retrieve original user data from the database

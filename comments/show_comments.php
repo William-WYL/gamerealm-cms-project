@@ -384,8 +384,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             document.getElementById('editCommentId').value = commentId;
             document.getElementById('editCommentContent').value = commentContent;
           });
+
+          // Listen for the scroll event and store the scroll position
+          window.addEventListener('scroll', function() {
+            localStorage.setItem('scrollPosition', window.scrollY);
+          });
+
+          // Restore the scroll position when the page reloads
+          if (localStorage.getItem('scrollPosition')) {
+            window.scrollTo(0, localStorage.getItem('scrollPosition'));
+          }
         });
       </script>
+
 
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 

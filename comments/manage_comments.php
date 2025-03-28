@@ -162,11 +162,17 @@ $totalPages = ceil($totalComments / $limit);
 
       <!-- Messages -->
       <?php if (isset($_GET['success'])): ?>
-        <div class="alert alert-success"><?= htmlspecialchars($_GET['success']) ?></div>
+        <div class="alert alert-success alert-dismissible fade show">
+          <?= htmlspecialchars(str_replace('+', ' ', $_GET['success'])) ?>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" />
+        </div>
       <?php endif; ?>
 
       <?php if (isset($_GET['error'])): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($_GET['error']) ?></div>
+        <div class="alert alert-danger alert-dismissible fade show">
+          <?= htmlspecialchars(str_replace('+', ' ', $_GET['error'])) ?>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" />
+        </div>
       <?php endif; ?>
 
       <!-- Comments Table -->

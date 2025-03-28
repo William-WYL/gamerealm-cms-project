@@ -85,12 +85,12 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
                 <form action="process_post.php" method="post" enctype='multipart/form-data'>
                     <div class="mb-3">
                         <label for="title" class="form-label">Title:</label>
-                        <input type="text" name="title" id="title" class="form-control" required>
+                        <input type="text" name="title" id="title" class="form-control w-50" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="category_id" class="form-label">Category:</label>
-                        <select name="category_id" id="category_id" class="form-select" required>
+                        <select name="category_id" id="category_id" class="form-select w-25" required>
                             <option value="">Select a category</option>
                             <?php foreach ($categories as $category): ?>
                                 <option value="<?= $category['category_id'] ?>">
@@ -102,18 +102,18 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
 
                     <div class="mb-3">
                         <label for="release_date" class="form-label">Release Date:</label>
-                        <input type="date" name="release_date" id="release_date" class="form-control" required>
+                        <input type="date" name="release_date" id="release_date" class="form-control w-25" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="description" class="form-label">Description:</label>
-                        <textarea name="description" id="description" rows="5" class="form-control" required></textarea>
+                        <textarea name="description" id="description" rows="5" class="form-control w-75" required></textarea>
                     </div>
 
                     <!-- File upload section -->
                     <div class="mb-3">
                         <label for="cover_image" class="form-label">Game Cover:</label>
-                        <input type="file" name="cover_image" id="cover_image" class="form-control">
+                        <input type="file" name="cover_image" id="cover_image" class="form-control w-25">
                         <small class="text-muted">Optional. (JPG, PNG)</small>
                     </div>
 

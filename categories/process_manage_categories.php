@@ -40,6 +40,7 @@ try {
   $category_id = $_POST['category_id'] ?? null;
   $category_name = trim(sanitizeInput('category_name'));
 
+  // Task finished:  Validation and Sanitazation
   // Validation
   $errors = [];
   $valid_commands = ['Create', 'Update', 'Delete'];

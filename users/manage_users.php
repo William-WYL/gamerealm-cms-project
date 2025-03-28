@@ -52,7 +52,7 @@ $users = $statement->fetchAll(); // Fetch all results
 
 // Pagination logic
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$limit = 3; // temp
+$limit = 10; // temp
 $offset = ($page - 1) * $limit;
 
 $totalQuery = "SELECT COUNT(*) FROM users";

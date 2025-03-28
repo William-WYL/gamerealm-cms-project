@@ -7,6 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   exit();
 }
 
+// Task finished:  Validation and Sanitazation
 // Sanitize inputs
 $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
 $password = $_POST['password'];

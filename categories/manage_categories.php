@@ -67,7 +67,7 @@ require('../tools/authenticate.php');
     </nav>
 
     <div id="create_categories" class="container my-4">
-      <form action="process_category.php" method="post">
+      <form action="process_manage_category.php" method="post">
         <fieldset>
           <legend class="fs-5">Add a new category</legend>
           <div class="row mb-3">
@@ -111,7 +111,7 @@ require('../tools/authenticate.php');
       <fieldset>
         <legend class="fs-5">Existing Categories</legend>
         <?php foreach ($categories as $category): ?>
-          <form action="process_category.php" method="post" class="mb-3">
+          <form action="process_manage_categories.php" method="post" class="mb-3">
             <input type="hidden" name="category_id" value="<?= $category['category_id'] ?>">
             <div class="row mb-3">
               <!-- Category Name Input -->

@@ -7,10 +7,11 @@ require_once '../tools/connect.php';
 // Admin email: adminwilliam@rrc.ca
 // Password: adminwilliampass
 
+// Task finished:  Validation and Sanitazation
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Sanitize and validate input
-  $username = trim(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
-  $email = trim(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
+  $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+  $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
   $password = $_POST['password'];
 
   // Validate required fields
