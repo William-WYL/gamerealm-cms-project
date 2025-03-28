@@ -39,7 +39,7 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
     <div class="container">
-        <div class="py-4 text-center">
+        <div class="py-4 text-start">
             <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm - Add New Game</a></h1>
         </div>
 
@@ -108,12 +108,6 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
                     <div class="mb-3">
                         <label for="description" class="form-label">Description:</label>
                         <textarea name="description" id="description" rows="5" class="form-control" required></textarea>
-                    </div>
-
-
-                    <div class="mb-3">
-                        <label for="cover_image" class="form-label">Cover Image URL:</label>
-                        <input type="text" name="cover_image" id="cover_image" class="form-control">
                     </div>
 
                     <!-- File upload section -->

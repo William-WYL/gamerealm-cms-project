@@ -10,7 +10,17 @@
 session_start();
 require('../tools/connect.php');
 
-// Validate game ID from query parameters
+if (isset($_SESSION['error'])) {
+  $error = $_SESSION['error'];
+  unset($_SESSION['error']);
+}
+if (isset($_SESSION['success'])) {
+  $success = $_SESSION['success'];
+  unset($_SESSION['success']);
+}
+
+
+// Validate game ID
 if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
   header("Location: ../index.php");
   exit("Invalid game ID.");
@@ -18,19 +28,11 @@ if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
 
 $game_id = $_GET['id'];
 
-// Retrieve game details with category information
-$gameQuery = "
-    SELECT 
-        g.id, 
-        g.title, 
-        g.description, 
-        g.release_date, 
-        g.cover_image,
-        c.category_name
-    FROM games g
-    LEFT JOIN categories c ON g.category_id = c.category_id
-    WHERE g.id = :game_id
-";
+// Fetch game details
+$gameQuery = "SELECT g.*, c.category_name 
+             FROM games g
+             LEFT JOIN categories c ON g.category_id = c.category_id
+             WHERE g.id = :game_id";
 
 try {
   $gameStatement = $db->prepare($gameQuery);
@@ -46,18 +48,14 @@ try {
   die("Database error: " . $e->getMessage());
 }
 
-// Retrieve comments with user information
-$commentQuery = "
-    SELECT 
-        cm.content,
-        cm.created_at,
-        u.username,
-        u.role
-    FROM comments cm
-    JOIN users u ON cm.user_id = u.id
-    WHERE cm.game_id = :game_id
-    ORDER BY cm.created_at DESC
-";
+// Fetch approved comments
+$commentQuery = "SELECT cm.*, u.username, u.role 
+                FROM comments cm
+                JOIN users u ON cm.user_id = u.id
+                WHERE cm.game_id = :game_id 
+                AND cm.status = 'approved'
+                -- reverse chronological order
+                ORDER BY cm.created_at DESC";
 
 try {
   $commentStatement = $db->prepare($commentQuery);
@@ -68,6 +66,115 @@ try {
   die("Database error: " . $e->getMessage());
 }
 
+// Handle comment submission
+$error = '';
+$success = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
+  if (!isset($_SESSION['user_id'])) {
+    $_SESSION['error'] = "You must be logged in to post comments.";
+    header("Location: show_comments.php?id=" . $game_id);
+    exit();
+  } else {
+    $content = trim($_POST['content']);
+
+    if (empty($content)) {
+      $_SESSION['error'] = "Comment content cannot be empty.";
+      header("Location: show_comments.php?id=" . $game_id);
+      exit();
+    } else {
+      try {
+        $insertQuery = "INSERT INTO comments 
+                             (content, user_id, game_id, status)
+                             VALUES (:content, :user_id, :game_id, 'approved')";
+
+        $stmt = $db->prepare($insertQuery);
+        $stmt->bindValue(':content', $content);
+        $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt->bindValue(':game_id', $game_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $_SESSION['success'] = "Comment submitted!";
+        header("Location: show_comments.php?id=" . $game_id);
+        exit();
+      } catch (PDOException $e) {
+        $_SESSION['error'] = "Error submitting comment: " . $e->getMessage();
+        header("Location: show_comments.php?id=" . $game_id);
+        exit();
+      }
+    }
+  }
+}
+
+// Handle comment deletion or update
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+  if (!isset($_SESSION['user_id'])) {
+    $_SESSION['error'] = "You must be logged in to perform this action.";
+    header("Location: show_comments.php?id=" . $game_id);
+    exit();
+  }
+
+  $comment_id = filter_input(INPUT_POST, 'comment_id', FILTER_SANITIZE_NUMBER_INT);
+
+  try {
+    // Validate comment ownership
+    $ownershipQuery = "SELECT user_id FROM comments WHERE id = :comment_id";
+    $stmt = $db->prepare($ownershipQuery);
+    $stmt->bindValue(':comment_id', $comment_id, PDO::PARAM_INT);
+    $stmt->execute();
+    $comment = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$comment) {
+      $_SESSION['error'] = "Comment not found.";
+      header("Location: show_comments.php?id=" . $game_id);
+      exit();
+    }
+
+    // Permission check: User must be either the comment author or an admin
+    if ($_SESSION['user_id'] != $comment['user_id'] && $_SESSION['role'] !== 'admin') {
+      $_SESSION['error'] = "Unauthorized action.";
+      header("Location: show_comments.php?id=" . $game_id);
+      exit();
+    }
+
+    // Process delete operation
+    if ($_POST['action'] === 'delete') {
+      $deleteQuery = "DELETE FROM comments WHERE id = :comment_id";
+      $stmt = $db->prepare($deleteQuery);
+      $stmt->bindValue(':comment_id', $comment_id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $_SESSION['success'] = "Comment deleted successfully.";
+    }
+
+    // Process update operation
+    if ($_POST['action'] === 'update') {
+      $newContent = trim($_POST['content']);
+      if (empty($newContent)) {
+        $_SESSION['error'] = "Comment content cannot be empty.";
+        header("Location: show_comments.php?id=" . $game_id);
+        exit();
+      }
+
+      $updateQuery = "UPDATE comments SET content = :content WHERE id = :comment_id";
+      $stmt = $db->prepare($updateQuery);
+      $stmt->bindValue(':content', $newContent);
+      $stmt->bindValue(':comment_id', $comment_id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $_SESSION['success'] = "Comment updated successfully.";
+    }
+
+    header("Location: show_comments.php?id=" . $game_id);
+    exit();
+  } catch (PDOException $e) {
+    $_SESSION['error'] = "Database error: " . $e->getMessage();
+    header("Location: show_comments.php?id=" . $game_id);
+    exit();
+  }
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -75,16 +182,17 @@ try {
 
 <head>
   <meta charset="UTF-8">
-  <title>GameRealm - <?= htmlspecialchars($game['title']) ?></title>
+  <title><?= htmlspecialchars($game['title']) ?> - GameRealm</title>
   <link rel="stylesheet" href="../general.css">
-  <!-- Bootstrap CSS -->
-  <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+
+  </style>
 </head>
 
 <body>
   <div class="container">
-    <div class="py-4 text-center">
+    <div class="py-4 text-start">
       <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm - Add New Game</a></h1>
     </div>
 
@@ -112,15 +220,16 @@ try {
                   <?php endif; ?>
                 </span>
               </li>
-              <li class="nav-item"><a class="nav-link" href="./users/logout.php">Logout</a></li>
+              <li class="nav-item"><a class="nav-link" href="../users/logout.php">Logout</a></li>
             <?php else: ?>
-              <li class="nav-item"><a class="nav-link" href="./users/register.php">Sign up</a></li>
-              <li class="nav-item"><a class="nav-link" href="./users/login.php">Log in</a></li>
+              <li class="nav-item"><a class="nav-link" href="../users/register.php">Sign up</a></li>
+              <li class="nav-item"><a class="nav-link" href="../users/login.php">Log in</a></li>
             <?php endif; ?>
           </ul>
         </div>
       </div>
     </nav>
+
 
     <!-- Game Details Section -->
     <div class="row justify-content-start border-bottom mb-2">
@@ -137,36 +246,144 @@ try {
       </div>
     </div>
 
+    <!-- Comments section -->
+    <div class="comments-section mt-5">
+      <h4 class="mb-4 border-bottom pb-2">Community Discussions</h4>
 
-    <!-- Comments Section -->
-    <div class="comments-section">
-      <h5 class="mb-4">Player Discussions</h5>
+      <!-- Comment form -->
+      <?php if (isset($_SESSION['user_id'])): ?>
+        <div class="card mb-4">
+          <div class="card-body">
+            <form method="post">
+              <?php if ($success): ?>
+                <div id="success-message" class="alert alert-success alert-dismissible fade show">
+                  <?= $success ?>
+                  <button type="button" class="btn-close text-end" data-bs-dismiss="alert"></button>
+                </div>
 
-      <?php if (!empty($comments)): ?>
-        <div class="list-group">
-          <?php foreach ($comments as $comment): ?>
-            <div class="list-group-item">
-              <div class="d-flex justify-content-between">
-                <span class="fw-bold"><?= htmlspecialchars($comment['username']) ?>
-                  <?php if ($comment['role'] === 'admin'): ?>
-                    <span class="badge bg-warning">(Admin)</span>
-                  <?php endif; ?>
-                </span>
-                <span class="text-muted"><?= date("M j, Y g:i a", strtotime($comment['created_at'])) ?></span>
+              <?php elseif ($error): ?>
+                <div id="error-message" class="alert alert-error alert-dismissible fade show">
+                  <?= $error ?>
+                  <button type="button" class="btn-close text-end" data-bs-dismiss="alert"></button>
+                </div>
+
+              <?php endif; ?>
+
+              <div class="mb-3">
+                <textarea name="content" class="form-control" rows="4"
+                  placeholder="Share your thoughts about this game..."
+                  maxlength="500"></textarea>
+                <small class="text-muted">Max 500 characters</small>
               </div>
-              <p class="mt-2"><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
-            </div>
-          <?php endforeach; ?>
+              <button type="submit" name="submit_comment"
+                class="btn btn-primary">Post Comment</button>
+            </form>
+          </div>
         </div>
       <?php else: ?>
-        <p class="text-start text-muted">Be the first to discuss this game!</p>
+        <div class="alert alert-info">
+          Please <a href="../users/login.php">login</a> to participate in discussions
+        </div>
       <?php endif; ?>
-    </div>
 
-    <footer class="text-center mt-5">
-      <p class="small text-muted">© GameRealm 2025 - All virtual rights reserved</p>
-    </footer>
-  </div> <!-- End Container -->
+      <!-- Comment display section -->
+      <?php foreach ($comments as $comment): ?>
+        <div class="col-12">
+          <div class="comment-card card shadow-sm">
+            <div class="card-body">
+              <div class="d-flex justify-content-between mb-2">
+                <div>
+                  <strong><?= htmlspecialchars($comment['username']) ?></strong>
+                  <?php if ($comment['role'] === 'admin'): ?>
+                    <span class="admin-badge badge bg-warning">Admin</span>
+                  <?php endif; ?>
+                </div>
+                <div>
+                  <!-- Action buttons -->
+                  <?php if (
+                    isset($_SESSION['user_id']) &&
+                    ($_SESSION['user_id'] == $comment['user_id'] || $_SESSION['role'] === 'admin')
+                  ): ?>
+                    <div class="btn-group">
+                      <!-- Edit button triggers modal -->
+                      <button type="button" class="btn btn-sm btn-outline-primary"
+                        style="width: 70px;"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editModal"
+                        data-comment-id="<?= $comment['id'] ?>"
+                        data-comment-content="<?= htmlspecialchars($comment['content']) ?>">
+                        Edit
+                      </button>
+
+                      <!-- Delete form -->
+                      <form method="post" class="d-inline">
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="comment_id" value="<?= $comment['id'] ?>">
+                        <button type="submit" class="btn btn-sm btn-outline-danger ms-2"
+                          style="width: 70px;"
+                          onclick="return confirm('Are you sure you want to delete this comment?')">
+                          Delete
+                        </button>
+                      </form>
+                    </div>
+                  <?php endif; ?>
+                </div>
+              </div>
+              <p class="mb-0"><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
+            </div>
+          </div>
+        </div>
+      <?php endforeach; ?>
+
+      <!-- Edit Comment Modal -->
+      <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form method="post">
+              <div class="modal-header">
+                <h5 class="modal-title">Edit Comment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" name="action" value="update">
+                <input type="hidden" name="comment_id" id="editCommentId">
+                <div class="mb-3">
+                  <textarea name="content" id="editCommentContent"
+                    class="form-control" rows="4" required></textarea>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Section -->
+      <div id="footer" class="text-center py-4 mt-5">
+        <p>&copy; 2025 GameRealm - All Rights Reserved</p>
+      </div> <!-- END div id="footer" -->
+
+      <!-- JavaScript to handle the edit modal -->
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          var editModal = document.getElementById('editModal');
+
+          editModal.addEventListener('show.bs.modal', function(event) {
+            var button = event.relatedTarget;
+            var commentId = button.getAttribute('data-comment-id');
+            var commentContent = button.getAttribute('data-comment-content');
+
+            document.getElementById('editCommentId').value = commentId;
+            document.getElementById('editCommentContent').value = commentContent;
+          });
+        });
+      </script>
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>

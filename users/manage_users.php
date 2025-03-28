@@ -225,32 +225,16 @@ $users = $statement->fetchAll(); // Fetch all results
       </div>
     </div>
 
-    <!-- Message notifications section  -->
+    <!-- Footer Section -->
+    <div id="footer" class="text-center py-4 mt-5">
+      <p>&copy; 2025 GameRealm - All Rights Reserved</p>
+    </div> <!-- END div id="footer" -->
 
   </div>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Hide messages -->
-  <script>
-    // Automatically hide success or error messages after 5 seconds
-    window.onload = function() {
-      const successMessage = document.getElementById('success-message');
-      const errorMessage = document.getElementById('error-message');
 
-      if (successMessage) {
-        setTimeout(function() {
-          successMessage.classList.remove('show'); // Hides the success message
-        }, 5000); // 5000 milliseconds = 5 seconds
-      }
-
-      if (errorMessage) {
-        setTimeout(function() {
-          errorMessage.classList.remove('show'); // Hides the error message
-        }, 5000); // 5000 milliseconds = 5 seconds
-      }
-    }
-  </script>
 </body>
 
 </html>

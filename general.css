@@ -25,9 +25,11 @@
   text-align: center;
 }
 
+
 .game_post:hover {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+
 
 .admin-badge {
   color: red;
@@ -39,4 +41,19 @@
   height: 400px;
   background-color: gainsboro;
   line-height: 300px;
+}
+
+.comment-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  transition: transform 0.2s;
+}
+
+.comment-card:hover {
+  transform: translateY(-2px);
+}
+
+.admin-badge {
+  font-size: 0.8em;
+  vertical-align: super;
 }

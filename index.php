@@ -111,7 +111,7 @@ $statement->execute();
         <?php endif; ?>
 
         <!-- Game List -->
-        <div id="game-list" class="row">
+        <div id="game-list" class="row mt-3">
             <?php while ($game = $statement->fetch()): ?>
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
                     <div class="game_post p-3">
@@ -122,10 +122,14 @@ $statement->execute();
                         </h2>
                         <div class="game_image mb-2">
                             <?php if (isset($game['cover_image'])) : ?>
-                                <img src="./asset/images/<?= htmlspecialchars($game['cover_image']) ?>"
-                                    alt="<?= htmlspecialchars($game['title']) ?>" class="img-fluid">
+                                <a href="comments/show_comments.php?id=<?= $game['id'] ?>">
+                                    <img src="./asset/images/<?= htmlspecialchars($game['cover_image']) ?>"
+                                        alt="<?= htmlspecialchars($game['title']) ?>" class="img-fluid">
+                                </a>
                             <?php else : ?>
-                                <div class="no-image text-center fs-3 fw-light text-body-secondary" style="margin:auto;">No Image</div>
+                                <a href="comments/show_comments.php?id=<?= $game['id'] ?>" class="text-decoration-none">
+                                    <div class="no-image text-center fs-3 fw-light text-body-secondary" style="margin:auto;">No Image</div>
+                                </a>
                             <?php endif ?>
 
                         </div>
