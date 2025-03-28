@@ -57,3 +57,14 @@
   font-size: 0.8em;
   vertical-align: super;
 }
+
+/* show_comments.php  img */
+body>div>div.row.justify-content-start.border-bottom.mb-2>div>img {
+  width: 500px;
+
+}
+
+/* index game-list cover image */
+#game-list>div>div>div>a>img {
+  width: 267px;
+}
