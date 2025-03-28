@@ -76,6 +76,7 @@ try {
 <head>
   <meta charset="UTF-8">
   <title>GameRealm - <?= htmlspecialchars($game['title']) ?></title>
+  <link rel="stylesheet" href="../general.css">
   <!-- Bootstrap CSS -->
   <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -96,7 +97,7 @@ try {
           <ul class="navbar-nav">
             <li class="nav-item"><a class="nav-link" href="../index.php">Home</a></li>
             <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-              <li class="nav-item active"><a class="nav-link active" href="post.php">Add Game</a></li>
+              <li class="nav-item active"><a class="nav-link active" href="../games/post.php">Add Game</a></li>
               <li class="nav-item"><a class="nav-link" href="../categories/manage_categories.php">Categories</a></li>
               <li class="nav-item"><a class="nav-link" href="../users/manage_users.php">Users</a></li>
               <li class="nav-item"><a class="nav-link" href="../comments/manage_comments.php">Comments</a></li>
@@ -124,7 +125,11 @@ try {
     <!-- Game Details Section -->
     <div class="row justify-content-start border-bottom mb-2">
       <div class="col-md-6 text-start">
-        <img src="../asset/images/<?= htmlspecialchars($game['cover_image']) ?>" class="img-fluid mb-4" alt="<?= htmlspecialchars($game['title']) ?> Cover">
+        <?php if (isset($game['cover_image'])) : ?>
+          <img src="../asset/images/<?= htmlspecialchars($game['cover_image']) ?>" class="img-fluid mb-4" alt="<?= htmlspecialchars($game['title']) ?> Cover">
+        <?php else : ?>
+          <div class="no-image text-center fs-3 fw-light text-body-secondary">No Image</div>
+        <?php endif ?>
         <h5 class="mb-3"><?= htmlspecialchars($game['title']) ?></h5>
         <p><strong>Released:</strong> <?= date("F j, Y", strtotime($game['release_date'])) ?></p>
         <p><strong>Category:</strong> <?= htmlspecialchars($game['category_name'] ?? 'Uncategorized') ?></p>

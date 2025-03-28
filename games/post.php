@@ -31,6 +31,9 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
     <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="../general.css">
+
+    <!-- Include external JavaScript file -->
+    <script src="./validateImageGracefully.js"></script>
     <title>Add New Game - GameRealm</title>
 </head>
 
@@ -79,7 +82,7 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
                 <legend class="fs-5">Add a New Game</legend>
             </div>
             <div class="card-body">
-                <form action="process_post.php" method="post">
+                <form action="process_post.php" method="post" enctype='multipart/form-data'>
                     <div class="mb-3">
                         <label for="title" class="form-label">Title:</label>
                         <input type="text" name="title" id="title" class="form-control" required>
@@ -107,10 +110,17 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
                         <textarea name="description" id="description" rows="5" class="form-control" required></textarea>
                     </div>
 
+
                     <div class="mb-3">
-                        <label for="cover_image" class="form-label">Cover Image:</label>
-                        <input type="file" name="cover_image" id="cover_image" class="form-control" accept="image/*">
-                        <small class="text-muted">Max size: 2MB (JPEG, PNG, GIF)</small>
+                        <label for="cover_image" class="form-label">Cover Image URL:</label>
+                        <input type="text" name="cover_image" id="cover_image" class="form-control">
+                    </div>
+
+                    <!-- File upload section -->
+                    <div class="mb-3">
+                        <label for="cover_image" class="form-label">Game Cover:</label>
+                        <input type="file" name="cover_image" id="cover_image" class="form-control">
+                        <small class="text-muted">Optional. (JPG, PNG)</small>
                     </div>
 
                     <p>
@@ -123,6 +133,8 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
         <footer class="text-center py-3 mt-4">
             <p class="small text-muted">Copywrong 2025 - No Rights Reserved</p>
         </footer>
+
+
     </div> <!-- End Container -->
 </body>
 

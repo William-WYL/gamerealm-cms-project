@@ -1,52 +1,73 @@
 <?php
 
-/*******w******** 
-    
-    Name: Wei Wang
-    Date: February 6, 2025
-    Description: Blogging Application (CRUD tasks), handle update, create, delete
-
- ****************/
-
 require('../tools/connect.php');
+require('../tools/authenticate.php');
 
-// Function to sanitize user input
+require "../tools/ImageResize.php";
+require "../tools/ImageResizeException.php";
+
+use \Gumlet\ImageResize;
+
+// Handle image upload
+// Function to validate if the file is an image
+function file_is_an_image($temporary_path, $new_path)
+{
+    $allowed_mime_types      = ['image/gif', 'image/jpeg', 'image/png'];
+    $allowed_file_extensions = ['gif', 'jpg', 'jpeg', 'png'];
+
+    $actual_file_extension   = strtolower(pathinfo($new_path, PATHINFO_EXTENSION));
+    $actual_mime_type = mime_content_type($temporary_path);
+
+    $file_extension_is_valid = in_array($actual_file_extension, $allowed_file_extensions);
+    $mime_type_is_valid      = in_array($actual_mime_type, $allowed_mime_types);
+
+    return $file_extension_is_valid && $mime_type_is_valid;
+}
+
+$cover_image = null;
+if (isset($_FILES['cover_image']) && $_FILES['cover_image']['error'] === UPLOAD_ERR_OK) {
+    // Get the temporary file path and the new file path
+    $temporary_path = $_FILES['cover_image']['tmp_name'];
+    $new_path = $_FILES['cover_image']['name'];
+
+    // Validate the uploaded file using the file_is_an_image function
+    if (!file_is_an_image($temporary_path, $new_path)) {
+        die("Error: Only JPG, PNG, GIF files are allowed.");
+    }
+
+    // Generate a unique filename
+    $file_extension = strtolower(pathinfo($new_path, PATHINFO_EXTENSION));
+    $filename = uniqid() . '.' . $file_extension;
+    $target_dir = $_SERVER['DOCUMENT_ROOT'] . '/WebDev2/Project/gamerealm-cms/asset/images/';
+    $target_path = $target_dir . $filename;
+
+    // Ensure the directory exists
+    if (!is_dir($target_dir)) {
+        mkdir($target_dir, 0777, true);
+    }
+
+    // Move the uploaded file
+    if (!move_uploaded_file($temporary_path, $target_path)) {
+        die("Error: Failed to upload image.");
+    }
+
+    $cover_image = $filename;
+}
+
+// General input filtering and validation
 function sanitizeInput($input)
 {
     return filter_input(INPUT_POST, $input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 }
 
-// Function to validate date format
-function validateDate($date, $format = 'Y-m-d')
-{
-    $d = DateTime::createFromFormat($format, $date);
-    return $d && $d->format($format) === $date;
-}
-
-// Function to execute queries
-function executeQuery($query, $params)
-{
-    global $db;
-    $statement = $db->prepare($query);
-    foreach ($params as $key => $value) {
-        $statement->bindValue($key, $value);
-    }
-    return $statement->execute();
-}
-
-// Get the command from POST request (Create, Update, Delete)
-$command = $_POST['command'] ?? '';
-
-// Common input sanitization
-$id = isset($_POST['id']) ? $_POST['id'] : null;
+$id = $_POST['id'] ?? null;
 $title = sanitizeInput('title');
 $release_date = sanitizeInput('release_date');
 $description = sanitizeInput('description');
-$cover_image = sanitizeInput('cover_image');
 $category_id = sanitizeInput('category_id');
 
 // ID validation
-$isInvalidId = !$id || !filter_var($id, FILTER_VALIDATE_INT);
+$isInvalidId = $id && !filter_var($id, FILTER_VALIDATE_INT);
 
 // Validate required fields
 $requiredFields = [
@@ -62,20 +83,20 @@ foreach ($requiredFields as $field => $value) {
     }
 }
 
-// Validate data formats
-if (!validateDate($release_date)) {
+// Validate date format
+if (!DateTime::createFromFormat('Y-m-d', $release_date)) {
     die("Error: Invalid date format. Use YYYY-MM-DD.");
 }
 
+// Validate category ID
 if (!filter_var($category_id, FILTER_VALIDATE_INT)) {
     die("Error: Invalid category selection.");
 }
 
-// Handle different actions
 try {
     $db->beginTransaction();
 
-    switch ($command) {
+    switch ($_POST['command']) {
         case 'Create':
             $query = "INSERT INTO games 
                      (title, release_date, description, cover_image, category_id) 
@@ -98,15 +119,28 @@ try {
             exit;
 
         case 'Update':
-            if ($isInvalidId) {
+            if (!$id || !filter_var($id, FILTER_VALIDATE_INT)) {
                 throw new Exception("Invalid game ID");
+            }
+
+            // Get the old image filename
+            $stmt = $db->prepare("SELECT cover_image FROM games WHERE id = :id");
+            $stmt->execute([':id' => $id]);
+            $old_image = $stmt->fetchColumn();
+
+            // If a new image is uploaded, handle the old image
+            if ($cover_image && $old_image) {
+                $old_image_path = $_SERVER['DOCUMENT_ROOT'] . '/WebDev2/Project/gamerealm-cms/asset/images/' . $old_image;
+                if (file_exists($old_image_path)) {
+                    unlink($old_image_path);
+                }
             }
 
             $query = "UPDATE games SET 
                      title = :title,
                      release_date = :release_date,
                      description = :description,
-                     cover_image = :cover_image,
+                     cover_image = COALESCE(:cover_image, cover_image),
                      category_id = :category_id
                      WHERE id = :id";
 
@@ -126,8 +160,20 @@ try {
             exit;
 
         case 'Delete':
-            if ($isInvalidId) {
+            if (!$id || !filter_var($id, FILTER_VALIDATE_INT)) {
                 throw new Exception("Invalid game ID");
+            }
+
+            // Delete the associated image file
+            $stmt = $db->prepare("SELECT cover_image FROM games WHERE id = :id");
+            $stmt->execute([':id' => $id]);
+            $image = $stmt->fetchColumn();
+
+            if ($image) {
+                $image_path = $_SERVER['DOCUMENT_ROOT'] . '/WebDev2/Project/gamerealm-cms/asset/images/' . $image;
+                if (file_exists($image_path)) {
+                    unlink($image_path);
+                }
             }
 
             $query = "DELETE FROM games WHERE id = :id";
@@ -148,4 +194,4 @@ try {
     die("Error: " . $e->getMessage());
 }
 ?>
-<!-- end -->
+<!-- End -->

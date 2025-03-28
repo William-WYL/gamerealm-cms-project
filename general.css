@@ -33,3 +33,10 @@
   color: red;
   font-weight: bold;
 }
+
+.no-image {
+  width: 274px;
+  height: 400px;
+  background-color: gainsboro;
+  line-height: 300px;
+}

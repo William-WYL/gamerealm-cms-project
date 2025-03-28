@@ -121,8 +121,13 @@ $statement->execute();
                             </a>
                         </h2>
                         <div class="game_image mb-2">
-                            <img src="./asset/images/<?= htmlspecialchars($game['cover_image']) ?>"
-                                alt="<?= htmlspecialchars($game['title']) ?>" class="img-fluid">
+                            <?php if (isset($game['cover_image'])) : ?>
+                                <img src="./asset/images/<?= htmlspecialchars($game['cover_image']) ?>"
+                                    alt="<?= htmlspecialchars($game['title']) ?>" class="img-fluid">
+                            <?php else : ?>
+                                <div class="no-image text-center fs-3 fw-light text-body-secondary" style="margin:auto;">No Image</div>
+                            <?php endif ?>
+
                         </div>
 
                         <p class="small text-muted">
