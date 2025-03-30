@@ -32,39 +32,11 @@ require('../tools/authenticate.php');
       <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm - Manage Categories</a></h1>
     </div>
 
-    <nav id="menu" class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-2">
-      <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item"><a class="nav-link" href="../index.php">Home</a></li>
-            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-              <li class="nav-item"><a class="nav-link " href="../games/post.php">Add Game</a></li>
-              <li class="nav-item active"><a class="nav-link active" href="manage_categories.php">Categories</a></li>
-              <li class="nav-item"><a class="nav-link" href="../users/manage_users.php">Users</a></li>
-              <li class="nav-item"><a class="nav-link" href="../comments/manage_comments.php">Comments</a></li>
-            <?php endif; ?>
-          </ul>
-          <ul class="navbar-nav ms-auto">
-            <?php if (isset($_SESSION['username'])): ?>
-              <li class="nav-item">
-                <span class="nav-link text-primary">Welcome, <?= htmlspecialchars($_SESSION['username']) ?>
-                  <?php if ($_SESSION['role'] === 'admin'): ?>
-                    <span class="admin-badge text-warning">(Admin)</span>
-                  <?php endif; ?>
-                </span>
-              </li>
-              <li class="nav-item"><a class="nav-link" href="./users/logout.php">Logout</a></li>
-            <?php else: ?>
-              <li class="nav-item"><a class="nav-link" href="./users/register.php">Sign up</a></li>
-              <li class="nav-item"><a class="nav-link" href="./users/login.php">Log in</a></li>
-            <?php endif; ?>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <?php
+    $basePath = "../";
+    $currentPage = "categories";
+    include '../components/navigation.php';
+    ?>
 
     <div id="create_categories" class="container my-4">
       <form action="process_manage_category.php" method="post">
@@ -130,9 +102,8 @@ require('../tools/authenticate.php');
       </fieldset>
     </div>
 
-    <div id="footer" class="text-center py-3">
-      Copywrong 2025 - No Rights Reserved
-    </div> <!-- END div id="footer" -->
+    <!-- Footer -->
+    <?php include '../components/footer.php'; ?>
   </div> <!-- END div id="wrapper" -->
 
   <!-- Bootstrap JS -->

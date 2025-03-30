@@ -128,6 +128,19 @@ try {
             $stmt->execute([':id' => $id]);
             $old_image = $stmt->fetchColumn();
 
+
+            // Check if the "delete image" checkbox is checked
+            $deleteImageChecked = isset($_POST['delete_image']) && $_POST['delete_image'] == '1';
+
+            // If the checkbox is checked and there is an old image, delete it
+            if ($deleteImageChecked && $old_image) {
+                $old_image_path = $_SERVER['DOCUMENT_ROOT'] . '/WebDev2/Project/gamerealm-cms/asset/images/' . $old_image;
+                if (file_exists($old_image_path)) {
+                    unlink($old_image_path);
+                }
+                $cover_image = null;
+            }
+
             // If a new image is uploaded, handle the old image
             if ($cover_image && $old_image) {
                 $old_image_path = $_SERVER['DOCUMENT_ROOT'] . '/WebDev2/Project/gamerealm-cms/asset/images/' . $old_image;
@@ -140,7 +153,7 @@ try {
                      title = :title,
                      release_date = :release_date,
                      description = :description,
-                     cover_image = COALESCE(:cover_image, cover_image),
+                     cover_image = :cover_image,
                      category_id = :category_id
                      WHERE id = :id";
 
@@ -153,10 +166,12 @@ try {
                 ':id' => $id
             ];
 
+
+
             $statement = $db->prepare($query);
             $statement->execute($params);
             $db->commit();
-            header("Location: ../comments/show_comments.php?id=$id");
+            header("Location: ../games/edit.php?id=$id");
             exit;
 
         case 'Delete':

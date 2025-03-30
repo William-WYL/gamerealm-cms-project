@@ -366,10 +366,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         </div>
       </div>
 
-      <!-- Footer Section -->
-      <div id="footer" class="text-center py-4 mt-5">
-        <p>&copy; 2025 GameRealm - All Rights Reserved</p>
-      </div> <!-- END div id="footer" -->
+
+      <!-- Footer -->
+      <?php include '../components/footer.php'; ?>
 
       <!-- JavaScript to handle the edit modal -->
       <script>

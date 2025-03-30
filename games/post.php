@@ -33,7 +33,7 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../general.css">
 
     <!-- Include external JavaScript file -->
-    <script src="./validateImageGracefully.js"></script>
+    <script src="./js/imageController.js"></script>
     <title>Add New Game - GameRealm</title>
 </head>
 
@@ -43,39 +43,11 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
             <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm - Add New Game</a></h1>
         </div>
 
-        <nav id="menu" class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-2">
-            <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" href="../index.php">Home</a></li>
-                        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                            <li class="nav-item active"><a class="nav-link active" href="post.php">Add Game</a></li>
-                            <li class="nav-item"><a class="nav-link" href="../categories/manage_categories.php">Categories</a></li>
-                            <li class="nav-item"><a class="nav-link" href="../users/manage_users.php">Users</a></li>
-                            <li class="nav-item"><a class="nav-link" href="../comments/manage_comments.php">Comments</a></li>
-                        <?php endif; ?>
-                    </ul>
-                    <ul class="navbar-nav ms-auto">
-                        <?php if (isset($_SESSION['username'])): ?>
-                            <li class="nav-item">
-                                <span class="nav-link text-primary">Welcome, <?= htmlspecialchars($_SESSION['username']) ?>
-                                    <?php if ($_SESSION['role'] === 'admin'): ?>
-                                        <span class="admin-badge text-warning">(Admin)</span>
-                                    <?php endif; ?>
-                                </span>
-                            </li>
-                            <li class="nav-item"><a class="nav-link" href="./users/logout.php">Logout</a></li>
-                        <?php else: ?>
-                            <li class="nav-item"><a class="nav-link" href="./users/register.php">Sign up</a></li>
-                            <li class="nav-item"><a class="nav-link" href="./users/login.php">Log in</a></li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        <?php
+        $basePath = "../";
+        $currentPage = "add_game";
+        include '../components/navigation.php';
+        ?>
 
         <div class="card">
             <div class="card-header">
@@ -124,9 +96,8 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 
-        <footer class="text-center py-3 mt-4">
-            <p class="small text-muted">Copywrong 2025 - No Rights Reserved</p>
-        </footer>
+        <!-- Footer -->
+        <?php include '../components/footer.php'; ?>
 
 
     </div> <!-- End Container -->

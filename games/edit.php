@@ -58,7 +58,7 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../general.css">
 
     <!-- Include external JavaScript file -->
-    <script src="./validateImageGracefully.js"></script>
+    <script src="./js/imageController.js"></script>
     <title>Edit Game - GameRealm</title>
 </head>
 
@@ -138,18 +138,24 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
                             <textarea name="description" id="description" rows="5" class="form-control" required><?= htmlspecialchars($game['description']) ?></textarea>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="cover_image" class="form-label">Cover Image URL:</label>
+                        <div id="image_container" class="mb-3">
+                            <label for="cover_image" class="form-label">Cover Image:</label>
                             <div>
-                                <img style="width: 300px;" src="../asset/images/<?= htmlspecialchars($game['cover_image']) ?>" alt="No Cover Image">
+                                <img id="preview_image" style="width: 300px;" src="../asset/images/<?= htmlspecialchars($game['cover_image']) ?>" alt="<?= htmlspecialchars($game['cover_image']) ?>">
                             </div>
                             <div><?= htmlspecialchars($game['cover_image']) ?></div>
+
                         </div>
 
                         <div class="mb-3">
                             <label for="cover_image" class="form-label">Upload a new image:</label>
                             <input type="file" name="cover_image" id="cover_image" class="form-control">
-                            <small class="text-muted">Optional. (JPG, PNG)</small>
+
+                        </div>
+
+                        <div class="mb-3">
+                            <input type="checkbox" name="delete_image" id="delete_image" value="1">
+                            <label for="delete_image" class="form-label">I don't need any image for this game.</label>
                         </div>
 
                         <input type="hidden" name="id" value="<?= $game['id'] ?>" />
@@ -166,7 +172,6 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
                 <p class="small text-muted">Copywrong 2025 - No Rights Reserved</p>
             </footer>
         </div> <!-- End Container -->
-
 
 </body>
 

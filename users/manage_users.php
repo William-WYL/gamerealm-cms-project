@@ -52,7 +52,7 @@ $users = $statement->fetchAll(); // Fetch all results
 
 // Pagination logic
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$limit = 10; // temp
+$limit = 1000; // temp
 $offset = ($page - 1) * $limit;
 
 $totalQuery = "SELECT COUNT(*) FROM users";
@@ -90,39 +90,11 @@ $users = $statement->fetchAll();
     </div>
 
     <!-- Navigation bar section -->
-    <nav id="menu" class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-2">
-      <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item"><a class="nav-link" href="../index.php">Home</a></li>
-            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-              <li class="nav-item"><a class="nav-link " href="../games/post.php">Add Game</a></li>
-              <li class="nav-item "><a class="nav-link " href="../categories/manage_categories.php">Categories</a></li>
-              <li class="nav-item active"><a class="nav-link active" href="manage_users.php">Users</a></li>
-              <li class="nav-item"><a class="nav-link" href="../comments/manage_comments.php">Comments</a></li>
-            <?php endif; ?>
-          </ul>
-          <ul class="navbar-nav ms-auto">
-            <?php if (isset($_SESSION['username'])): ?>
-              <li class="nav-item">
-                <span class="nav-link text-primary">Welcome, <?= htmlspecialchars($_SESSION['username']) ?>
-                  <?php if ($_SESSION['role'] === 'admin'): ?>
-                    <span class="admin-badge text-warning">(Admin)</span>
-                  <?php endif; ?>
-                </span>
-              </li>
-              <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
-            <?php else: ?>
-              <li class="nav-item"><a class="nav-link" href="register.php">Sign up</a></li>
-              <li class="nav-item"><a class="nav-link" href="login.php">Log in</a></li>
-            <?php endif; ?>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <?php
+    $basePath = "../";
+    $currentPage = "users";
+    include '../components/navigation.php';
+    ?>
 
     <div class="container my-4">
       <!-- Add new user form -->
@@ -156,6 +128,9 @@ $users = $statement->fetchAll();
       <form method="get" class="mb-5 border p-3">
         <fieldset>
           <legend class="fs-5">Search Users</legend>
+          <div class="col-md-2">
+            <a type="submit" href="manage_users.php" class=" btn btn-sm text-decoration-none">Show All Users</a>
+          </div>
           <div class="row g-3">
             <div class="col-md-3">
               <input type="number" name="id" placeholder="User ID" class="form-control">
@@ -210,59 +185,48 @@ $users = $statement->fetchAll();
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($users as $user): ?>
+              <?php if (empty($users)): ?>
                 <tr>
-                  <form action="process_manage_users.php" method="post">
-                    <input type="hidden" name="id" value="<?= $user['id'] ?>">
-                    <td><?= $user['id'] ?></td>
-                    <td>
-                      <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" class="form-control" required>
-                    </td>
-                    <td>
-                      <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" class="form-control" required>
-                    </td>
-                    <td>
-                      <select name="role" class="form-select">
-                        <option value="user" <?= $user['role'] == 'user' ? 'selected' : '' ?>>User</option>
-                        <option value="admin" <?= $user['role'] == 'admin' ? 'selected' : '' ?>>Admin</option>
-                      </select>
-                    </td>
-                    <td class="d-flex gap-2">
-                      <button type="submit" name="command" value="Update" class="btn btn-warning">Update</button>
-                      <button type="submit" name="command" value="Delete" onclick="return confirm('Delete this user?')" class="btn btn-danger">Delete</button>
-                    </td>
-                  </form>
+                  <td colspan="5" class="text-center p-3">No user found</td>
                 </tr>
-              <?php endforeach; ?>
+              <?php else: ?>
+                <?php foreach ($users as $user): ?>
+                  <tr>
+                    <form action="process_manage_users.php" method="post">
+                      <input type="hidden" name="id" value="<?= $user['id'] ?>">
+                      <td><?= $user['id'] ?></td>
+                      <td>
+                        <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" class="form-control" required>
+                      </td>
+                      <td>
+                        <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" class="form-control" required>
+                      </td>
+                      <td>
+                        <select name="role" class="form-select">
+                          <option value="user" <?= $user['role'] == 'user' ? 'selected' : '' ?>>User</option>
+                          <option value="admin" <?= $user['role'] == 'admin' ? 'selected' : '' ?>>Admin</option>
+                        </select>
+                      </td>
+                      <td class="d-flex gap-2">
+                        <button type="submit" name="command" value="Update" class="btn btn-outline-warning">Update</button>
+                        <button type="submit" name="command" value="Delete" onclick="return confirm('Delete this user?')" class="btn btn-outline-danger">Delete</button>
+                      </td>
+                    </form>
+                  </tr>
+                <?php endforeach; ?>
+              <?php endif; ?>
             </tbody>
           </table>
         </fieldset>
+        <div class="mb-2">Total Users: <span class="text-info"><?= $totalUsers ?></span></div>
       </div>
     </div>
 
-    <!-- Pagination Navigation -->
-    <?php if ($totalUsers > $limit): ?>
-      <nav class="pagination justify-content-center mt-3">
-        <ul class="pagination">
-          <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-            <a class="page-link" href="?page=<?= $page - 1 ?>">Prev</a>
-          </li>
-          <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-            <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
-              <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
-            </li>
-          <?php endfor; ?>
-          <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
-            <a class="page-link" href="?page=<?= $page + 1 ?>">Next</a>
-          </li>
-        </ul>
-      </nav>
-    <?php endif; ?>
+    <!-- Pagination -->
+    <?php include '../components/pagination.php'; ?>
 
-    <!-- Footer Section -->
-    <div id="footer" class="text-center py-4 mt-5">
-      <p>&copy; 2025 GameRealm - All Rights Reserved</p>
-    </div> <!-- END div id="footer" -->
+    <!-- Footer -->
+    <?php include '../components/footer.php'; ?>
 
   </div>
 
