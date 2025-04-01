@@ -19,7 +19,7 @@
 .game_post {
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 15px;
+  padding: 0px;
   background: #fff;
   transition: 0.3s;
   text-align: center;
@@ -61,10 +61,23 @@
 /* show_comments.php  img */
 body>div>div.row.justify-content-start.border-bottom.mb-2>div>img {
   width: 500px;
-
 }
 
-/* index game-list cover image */
-#game-list>div>div>div>a>img {
-  width: 267px;
+
+.search-container {
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+.game-card {
+  transition: transform 0.2s;
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+}
+
+
+#searchForm {
+  transition: all 0.3s ease-in-out;
 }

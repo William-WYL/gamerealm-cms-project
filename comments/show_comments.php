@@ -247,7 +247,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         <h5 class="mb-3"><?= htmlspecialchars($game['title']) ?></h5>
         <p><strong>Released:</strong> <?= date("F j, Y", strtotime($game['release_date'])) ?></p>
         <p><strong>Category:</strong> <?= htmlspecialchars($game['category_name'] ?? 'Uncategorized') ?></p>
-        <p><?= nl2br(htmlspecialchars($game['description'])) ?></p>
+        <p><?= nl2br(htmlspecialchars(html_entity_decode(($game['description'])))) ?></p>
       </div>
     </div>
 

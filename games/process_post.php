@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require('../tools/connect.php');
 require('../tools/authenticate.php');
 
@@ -115,7 +115,11 @@ try {
             $statement->execute($params);
             $newId = $db->lastInsertId();
             $db->commit();
-            header("Location: ../comments/show_comments.php?id=$newId");
+
+            // Set flash message for creation
+            $_SESSION['success'] = "Game created successfully.";
+            header("Location: dashboard.php");
+            // header("Location: ../comments/show_comments.php?id=$newId");
             exit;
 
         case 'Update':
@@ -129,24 +133,34 @@ try {
             $old_image = $stmt->fetchColumn();
 
 
+
             // Check if the "delete image" checkbox is checked
             $deleteImageChecked = isset($_POST['delete_image']) && $_POST['delete_image'] == '1';
 
-            // If the checkbox is checked and there is an old image, delete it
-            if ($deleteImageChecked && $old_image) {
+
+            if ($old_image) {
                 $old_image_path = $_SERVER['DOCUMENT_ROOT'] . '/WebDev2/Project/gamerealm-cms/asset/images/' . $old_image;
-                if (file_exists($old_image_path)) {
-                    unlink($old_image_path);
+
+                // If the checkbox is checked and there is an old image, delete it
+                if ($deleteImageChecked) {
+                    if (file_exists($old_image_path)) {
+                        unlink($old_image_path);
+                    }
+                    $cover_image = null;
                 }
-                $cover_image = null;
+
+                // If a new image is uploaded, handle the old image
+                if ($cover_image) {
+                    $old_image_path = $_SERVER['DOCUMENT_ROOT'] . '/WebDev2/Project/gamerealm-cms/asset/images/' . $old_image;
+                    if (file_exists($old_image_path)) {
+                        unlink($old_image_path);
+                    }
+                }
             }
 
-            // If a new image is uploaded, handle the old image
-            if ($cover_image && $old_image) {
-                $old_image_path = $_SERVER['DOCUMENT_ROOT'] . '/WebDev2/Project/gamerealm-cms/asset/images/' . $old_image;
-                if (file_exists($old_image_path)) {
-                    unlink($old_image_path);
-                }
+            // If no new image is provided and delete checkbox is not checked, keep the old image.
+            if (!$cover_image && !$deleteImageChecked) {
+                $cover_image = $old_image;
             }
 
             $query = "UPDATE games SET 
@@ -171,7 +185,11 @@ try {
             $statement = $db->prepare($query);
             $statement->execute($params);
             $db->commit();
+
+            // Set flash message for update
+            $_SESSION['success'] = "Game updated successfully.";
             header("Location: ../games/edit.php?id=$id");
+
             exit;
 
         case 'Delete':
@@ -195,7 +213,11 @@ try {
             $statement = $db->prepare($query);
             $statement->execute([':id' => $id]);
             $db->commit();
-            header("Location: ../index.php");
+
+            // A flash message for deletion.
+            $_SESSION['success'] = "Game deleted successfully.";
+            header("Location: dashboard.php");
+            // header("Location: ../index.php")
             exit;
 
         default:

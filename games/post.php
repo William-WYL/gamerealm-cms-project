@@ -82,25 +82,42 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
                         <textarea name="description" id="description" rows="5" class="form-control w-75" required></textarea>
                     </div>
 
+                    <!-- Image upload section -->
                     <!-- File upload section -->
-                    <div class="mb-3">
+                    <div id="image_container" class="mb-3">
                         <label for="cover_image" class="form-label">Game Cover:</label>
-                        <input type="file" name="cover_image" id="cover_image" class="form-control w-25">
-                        <small class="text-muted">Optional. (JPG, PNG)</small>
+                        <div class="mb-3">
+                            <label for="preview_image" class="form-label">Cover Image:</label>
+                            <img id="preview_image" src="" alt="Image Preview" style="width: 300px; display: none;">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="cover_image" class="form-label">Upload a new image:</label>
+                            <input type="file" name="cover_image" id="cover_image" class="form-control">
+                            <small class="text-muted">Optional. (JPG, PNG)</small>
+                        </div>
                     </div>
 
+
+                    <div class="mb-3">
+                        <input type="checkbox" name="delete_image" id="delete_image" value="1">
+                        <label for="delete_image" class="form-label">I don't need any image for this game.</label>
+                    </div>
+
+                    <!-- Submit section -->
                     <p>
                         <input class="btn btn-primary" type="submit" name="command" value="Create" />
                     </p>
                 </form>
             </div>
         </div>
-
         <!-- Footer -->
         <?php include '../components/footer.php'; ?>
-
-
     </div> <!-- End Container -->
+
+    <script>
+
+    </script>
 </body>
 
 </html>

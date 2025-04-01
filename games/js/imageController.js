@@ -57,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Validate image gracefullly
   // Attach the image file validation function to the file input's change event
-  // 
   fileInput.addEventListener('change', (e) => {
 
     validateImageFile;
@@ -107,6 +106,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
+
+
 
 
 

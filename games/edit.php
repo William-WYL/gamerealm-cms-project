@@ -8,8 +8,11 @@
 
  ****************/
 
+session_start();
 require('../tools/connect.php');
 require('../tools/authenticate.php');
+
+
 
 // Validate the game ID
 if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
@@ -69,40 +72,30 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
                 <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm - Add New Game</a></h1>
             </div>
 
-            <nav id="menu" class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-2">
-                <div class="container-fluid">
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav">
-                            <li class="nav-item"><a class="nav-link" href="../index.php">Home</a></li>
-                            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                                <li class="nav-item"><a class="nav-link" href="post.php">Add Game</a></li>
-                                <li class="nav-item active"><a class="nav-link active" href="#">Edit Game Details</a></li>
-                                <li class="nav-item"><a class="nav-link" href="../categories/manage_categories.php">Categories</a></li>
-                                <li class="nav-item"><a class="nav-link" href="../users/manage_users.php">Users</a></li>
-                                <li class="nav-item"><a class="nav-link" href="../comments/manage_comments.php">Comments</a></li>
-                            <?php endif; ?>
-                        </ul>
-                        <ul class="navbar-nav ms-auto">
-                            <?php if (isset($_SESSION['username'])): ?>
-                                <li class="nav-item">
-                                    <span class="nav-link text-primary">Welcome, <?= htmlspecialchars($_SESSION['username']) ?>
-                                        <?php if ($_SESSION['role'] === 'admin'): ?>
-                                            <span class="admin-badge text-warning">(Admin)</span>
-                                        <?php endif; ?>
-                                    </span>
-                                </li>
-                                <li class="nav-item"><a class="nav-link" href="./users/logout.php">Logout</a></li>
-                            <?php else: ?>
-                                <li class="nav-item"><a class="nav-link" href="./users/register.php">Sign up</a></li>
-                                <li class="nav-item"><a class="nav-link" href="./users/login.php">Log in</a></li>
-                            <?php endif; ?>
-                        </ul>
-                    </div>
+            <?php
+            $basePath = "../";
+            $currentPage = "edit_game_details";
+            include '../components/navigation.php';
+            ?>
+
+            <!-- Message Section -->
+            <?php if (isset($_SESSION['success'])): ?>
+                <div id="success-message" class="alert alert-success alert-dismissible fade show">
+                    <?= htmlspecialchars($_SESSION['success']) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            </nav>
+                <?php unset($_SESSION['success']); // Remove message after displaying 
+                ?>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['error'])): ?>
+                <div id="error-message" class="alert alert-danger alert-dismissible fade show">
+                    <?= htmlspecialchars($_SESSION['error']) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <?php unset($_SESSION['error']); // Remove message after displaying 
+                ?>
+            <?php endif; ?>
             </ul> <!-- END div id="menu" -->
             <div class="card">
                 <div class="card-header">
@@ -135,22 +128,20 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
 
                         <div class="mb-3">
                             <label for="description" class="form-label">Description:</label>
-                            <textarea name="description" id="description" rows="5" class="form-control" required><?= htmlspecialchars($game['description']) ?></textarea>
+                            <textarea name="description" id="description" rows="5" class="form-control" required><?= htmlspecialchars(html_entity_decode($game['description'])) ?></textarea>
                         </div>
 
                         <div id="image_container" class="mb-3">
-                            <label for="cover_image" class="form-label">Cover Image:</label>
+                            <label for="preview_image" class="form-label">Cover Image:</label>
                             <div>
                                 <img id="preview_image" style="width: 300px;" src="../asset/images/<?= htmlspecialchars($game['cover_image']) ?>" alt="<?= htmlspecialchars($game['cover_image']) ?>">
                             </div>
                             <div><?= htmlspecialchars($game['cover_image']) ?></div>
-
                         </div>
 
                         <div class="mb-3">
                             <label for="cover_image" class="form-label">Upload a new image:</label>
                             <input type="file" name="cover_image" id="cover_image" class="form-control">
-
                         </div>
 
                         <div class="mb-3">
