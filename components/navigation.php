@@ -18,7 +18,7 @@
             <?php endif; ?>
           </li>
           <li class="nav-item">
-            <a class="nav-link  fs-5<?= ($currentPage === 'categories') ? 'active' : '' ?>" href="<?= $basePath ?>categories/manage_categories.php">Categories</a>
+            <a class="nav-link  fs-5 <?= ($currentPage === 'categories') ? 'active' : '' ?>" href="<?= $basePath ?>categories/manage_categories.php">Categories</a>
           </li>
           <li class="nav-item">
             <a class="nav-link fs-5 <?= ($currentPage === 'users') ? 'active' : '' ?>" href="<?= $basePath ?>users/manage_users.php">Users</a>

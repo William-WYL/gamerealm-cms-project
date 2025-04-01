@@ -39,7 +39,7 @@ require('../tools/authenticate.php');
     ?>
 
     <div id="create_categories" class="container my-4">
-      <form action="process_manage_category.php" method="post">
+      <form action="process_manage_categories.php" method="post">
         <fieldset>
           <legend class="fs-5">Add a new category</legend>
           <div class="row mb-3">

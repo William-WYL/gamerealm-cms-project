@@ -59,8 +59,6 @@ document.addEventListener('DOMContentLoaded', function () {
   // Attach the image file validation function to the file input's change event
   fileInput.addEventListener('change', (e) => {
 
-    validateImageFile;
-
     let file = e.target.files[0];
 
     if (file) {
@@ -78,6 +76,8 @@ document.addEventListener('DOMContentLoaded', function () {
       preview.src = "";
       preview.style.display = 'none';
     }
+
+    validateImageFile();
   });
 
   // If there is no cover image, don't show deleteCheckbox and its parent

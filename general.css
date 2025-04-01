@@ -81,3 +81,5 @@ body>div>div.row.justify-content-start.border-bottom.mb-2>div>img {
 #searchForm {
   transition: all 0.3s ease-in-out;
 }
+
+#no_image {}

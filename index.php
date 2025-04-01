@@ -215,7 +215,11 @@ if ($currentCategoryId > 0) {
                                         class="card-img-top"
                                         alt="<?= htmlspecialchars($game['title']) ?>">
                                 </a>
-
+                            <?php else: ?>
+                                <a href="comments/show_comments.php?id=<?= $game['id'] ?>"
+                                    class="text-decoration-none text-dark">
+                                    <div id="no_image" style=" background-color: gainsboro; width: 100%; height:400px; text-align: center; ">No Image</div>
+                                </a>
                             <?php endif; ?>
                             <div class="card-body">
                                 <h5 class="card-title">
