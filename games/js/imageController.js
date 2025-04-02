@@ -79,12 +79,11 @@ document.addEventListener('DOMContentLoaded', function () {
       preview.style.display = 'none';
     }
 
-
   });
 
   // If there is no cover image, don't show deleteCheckbox and its parent
   deleteCheckbox.parentNode.style.display
-    = preview.height == 0 ? 'none' : 'block';
+    = preview.naturalHeight == 0 ? 'none' : 'block';
 
 
   // Add an event listener to the delete image checkbox

@@ -59,6 +59,19 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
                         <label for="title" class="form-label">Title:</label>
                         <input type="text" name="title" id="title" class="form-control w-50" required>
                     </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price:</label>
+                        <input
+                            type="number"
+                            name="price"
+                            id="price"
+                            class="form-control w-50"
+                            step="0.01"
+                            min="0"
+                            max="9999.99"
+                            placeholder="With 2 decimal places"
+                            required>
+                    </div>
 
                     <div class="mb-3">
                         <label for="category_id" class="form-label">Category:</label>

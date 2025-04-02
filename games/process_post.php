@@ -62,6 +62,7 @@ function sanitizeInput($input)
 
 $id = $_POST['id'] ?? null;
 $title = sanitizeInput('title');
+$price = filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 $release_date = sanitizeInput('release_date');
 $description = sanitizeInput('description');
 $category_id = sanitizeInput('category_id');
@@ -69,9 +70,22 @@ $category_id = sanitizeInput('category_id');
 // ID validation
 $isInvalidId = $id && !filter_var($id, FILTER_VALIDATE_INT);
 
+// Price validation
+if (!filter_var($price, FILTER_VALIDATE_FLOAT) || $price < 0) {
+    die("Invalid price: must be a positive number.");
+}
+
+if (strpos($price, '.') !== false && strlen(explode('.', $price)[1]) > 2) {
+    die("Invalid price: max 2 decimal places.");
+}
+
+
+
+
 // Validate required fields
 $requiredFields = [
     'title' => $title,
+    'price' => $price,
     'release_date' => $release_date,
     'description' => $description,
     'category_id' => $category_id
@@ -99,12 +113,13 @@ try {
     switch ($_POST['command']) {
         case 'Create':
             $query = "INSERT INTO games 
-                     (title, release_date, description, cover_image, category_id) 
+                     (title, price, release_date, description, cover_image, category_id) 
                      VALUES 
-                     (:title, :release_date, :description, :cover_image, :category_id)";
+                     (:title, :price, :release_date, :description, :cover_image, :category_id)";
 
             $params = [
                 ':title' => $title,
+                ':price' => $price,
                 ':release_date' => $release_date,
                 ':description' => $description,
                 ':cover_image' => $cover_image,
@@ -165,6 +180,7 @@ try {
 
             $query = "UPDATE games SET 
                      title = :title,
+                     price = :price,
                      release_date = :release_date,
                      description = :description,
                      cover_image = :cover_image,
@@ -173,6 +189,7 @@ try {
 
             $params = [
                 ':title' => $title,
+                ':price' => $price,
                 ':release_date' => $release_date,
                 ':description' => $description,
                 ':cover_image' => $cover_image,

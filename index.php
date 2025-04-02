@@ -11,7 +11,7 @@ $categories = $categoryStatement->fetchAll();
 // Handle search parameters
 $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
 $currentCategoryId = isset($_GET['category_id']) ? (int)$_GET['category_id'] : 0;
-$validSorts = ['title', 'category', 'date'];
+$validSorts = ['title', 'category', 'date', 'price'];
 $sort = isset($_GET['sort']) && in_array($_GET['sort'], $validSorts) ? $_GET['sort'] : 'date';
 
 // Pagination configuration
@@ -41,8 +41,12 @@ $whereClause = $queryConditions ? 'WHERE ' . implode(' AND ', $queryConditions) 
 
 // Configure sorting
 switch ($sort) {
+
     case 'title':
         $orderBy = 'g.title ASC';
+        break;
+    case 'price':
+        $orderBy = 'g.price DESC';
         break;
     case 'category':
         $orderBy = 'c.category_name ASC';
@@ -182,6 +186,13 @@ if ($currentCategoryId > 0) {
                 <a href="?<?= http_build_query([
                                 'search' => $searchTerm,
                                 'category_id' => $currentCategoryId,
+                                'sort' => 'price'
+                            ]) ?>" class="btn btn-outline-dark <?= $sort === 'price' ? 'active' : '' ?>">
+                    Sort by Price
+                </a>
+                <a href="?<?= http_build_query([
+                                'search' => $searchTerm,
+                                'category_id' => $currentCategoryId,
                                 'sort' => 'category'
                             ]) ?>" class="btn btn-outline-dark <?= $sort === 'category' ? 'active' : '' ?>">
                     Sort by Category
@@ -218,7 +229,7 @@ if ($currentCategoryId > 0) {
                             <?php else: ?>
                                 <a href="comments/show_comments.php?id=<?= $game['id'] ?>"
                                     class="text-decoration-none text-dark">
-                                    <div id="no_image" style=" background-color: gainsboro; width: 100%; height:400px; text-align: center; ">No Image</div>
+                                    <div id="no_image" style=" background-color: gainsboro; width: 100%; height:200px; text-align: center; ">No Image</div>
                                 </a>
                             <?php endif; ?>
                             <div class="card-body">
@@ -230,6 +241,9 @@ if ($currentCategoryId > 0) {
                                 </h5>
                                 <p class="small text-muted">
                                     <strong>Category:</strong> <?= !empty($game['category_name']) ? htmlspecialchars($game['category_name']) : 'Uncategorized' ?>
+                                </p>
+                                <p class="small text-muted">
+                                    <strong>Price:</strong> $<?= !empty($game['price']) ? htmlspecialchars($game['price']) : 'Uncategorized' ?>
                                 </p>
                                 <p class="card-text text-muted">
                                     <?= htmlspecialchars(truncateDescription(html_entity_decode($game['description']))) ?>
