@@ -51,6 +51,22 @@ if (isset($_FILES['cover_image']) && $_FILES['cover_image']['error'] === UPLOAD_
         die("Error: Failed to upload image.");
     }
 
+    // Create resized versions
+    try {
+        // Process image resizing
+        $resized_image = new ImageResize($target_path);
+        $resized_image->resizeToWidth(600);
+
+        // Save resized version and overwrite original
+        $resized_image->save($target_path);
+    } catch (Exception $e) {
+        // Cleanup on failure
+        if (file_exists($target_path)) {
+            unlink($target_path);
+        }
+        die("Image processing failed: " . $e->getMessage());
+    }
+
     $cover_image = $filename;
 }
 
@@ -60,7 +76,8 @@ function sanitizeInput($input)
     return filter_input(INPUT_POST, $input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 }
 
-$id = $_POST['id'] ?? null;
+// 4.2 ID sanitation and validation
+$id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
 $title = sanitizeInput('title');
 $price = filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 $release_date = sanitizeInput('release_date');
@@ -68,7 +85,9 @@ $description = sanitizeInput('description');
 $category_id = sanitizeInput('category_id');
 
 // ID validation
-$isInvalidId = $id && !filter_var($id, FILTER_VALIDATE_INT);
+if ($id && !filter_var($id, FILTER_VALIDATE_INT)) {
+    die("Invalid ID: must be a number.");
+}
 
 // Price validation
 if (!filter_var($price, FILTER_VALIDATE_FLOAT) || $price < 0) {
@@ -78,8 +97,6 @@ if (!filter_var($price, FILTER_VALIDATE_FLOAT) || $price < 0) {
 if (strpos($price, '.') !== false && strlen(explode('.', $price)[1]) > 2) {
     die("Invalid price: max 2 decimal places.");
 }
-
-
 
 
 // Validate required fields
@@ -96,6 +113,9 @@ foreach ($requiredFields as $field => $value) {
         die("Error: " . ucfirst($field) . " cannot be empty.");
     }
 }
+
+// 4.1 Explaination, title and description
+
 
 // Validate date format
 if (!DateTime::createFromFormat('Y-m-d', $release_date)) {

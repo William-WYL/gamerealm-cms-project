@@ -98,7 +98,7 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
                     <!-- Image upload section -->
                     <!-- File upload section -->
                     <div id="image_container" class="mb-3">
-                        <label for="cover_image" class="form-label">Game Cover:</label>
+
                         <div class="mb-3">
                             <label for="preview_image" class="form-label">Cover Image:</label>
                             <img id="preview_image" src="" alt="Image Preview" style="width: 300px; display: none;">

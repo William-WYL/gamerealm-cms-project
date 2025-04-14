@@ -48,9 +48,6 @@ switch ($sort) {
     case 'price':
         $orderBy = 'g.price DESC';
         break;
-    case 'category':
-        $orderBy = 'c.category_name ASC';
-        break;
     case 'date':
     default:
         $orderBy = 'g.release_date DESC';
@@ -140,7 +137,7 @@ if ($currentCategoryId > 0) {
                             <input type="text"
                                 name="search"
                                 class="form-control form-control-md"
-                                placeholder="Search games..."
+                                placeholder="Search games by title..."
                                 value="<?= htmlspecialchars($searchTerm) ?>">
 
                             <select name="category_id" class="form-select form-select-md">
@@ -189,13 +186,6 @@ if ($currentCategoryId > 0) {
                                 'sort' => 'price'
                             ]) ?>" class="btn btn-outline-dark <?= $sort === 'price' ? 'active' : '' ?>">
                     Sort by Price
-                </a>
-                <a href="?<?= http_build_query([
-                                'search' => $searchTerm,
-                                'category_id' => $currentCategoryId,
-                                'sort' => 'category'
-                            ]) ?>" class="btn btn-outline-dark <?= $sort === 'category' ? 'active' : '' ?>">
-                    Sort by Category
                 </a>
                 <a href="?<?= http_build_query([
                                 'search' => $searchTerm,

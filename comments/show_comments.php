@@ -54,7 +54,7 @@ try {
 }
 
 // Fetch approved comments
-$commentQuery = "SELECT cm.*, u.username, u.role 
+$commentQuery = "SELECT cm.*, u.username, u.role, cm.created_at
                 FROM comments cm
                 JOIN users u ON cm.user_id = u.id
                 WHERE cm.game_id = :game_id 
@@ -335,6 +335,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 </div>
               </div>
               <p class="mb-0"><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
+              <small class="text-muted">
+                <?= nl2br(htmlspecialchars($comment['created_at'])) ?>
+              </small>
             </div>
           </div>
         </div>
