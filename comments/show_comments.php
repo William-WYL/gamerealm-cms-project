@@ -198,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 <body>
   <div class="container">
     <div class="py-4 text-start">
-      <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm</a></h1>
+      <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm</a> - <?= htmlspecialchars($game['title']) ?></h1>
     </div>
 
     <nav id="menu" class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-2">
