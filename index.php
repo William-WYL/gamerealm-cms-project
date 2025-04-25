@@ -15,7 +15,7 @@ $validSorts = ['title', 'category', 'date', 'price'];
 $sort = isset($_GET['sort']) && in_array($_GET['sort'], $validSorts) ? $_GET['sort'] : 'date';
 
 // Pagination configuration
-$gamesPerPage = 12;
+$gamesPerPage = 12; // page value
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $gamesPerPage;
 
@@ -33,7 +33,7 @@ if ($currentCategoryId > 0) {
 if (!empty($searchTerm)) {
     $queryConditions[] = '(g.title LIKE :search)';
     // OR g.description LIKE :search
-    $queryParams[':search'] = "%{$searchTerm}%";
+    $queryParams[':search'] = "%{$searchTerm}%"; // wildcard
 }
 
 // Construct WHERE clause
@@ -117,30 +117,17 @@ if ($currentCategoryId > 0) {
 
         <!-- Main Search Form -->
         <div id="Search" class="d-flex w-100">
-            <!-- Search Trigger Button -->
-            <div class="text-center mb-4">
-                <button class="btn btn-dark btn-md"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#searchForm"
-                    aria-expanded="false"
-                    aria-controls="searchForm">
-                    Search Games
-                </button>
-            </div>
-
-            <!-- Collapsible Search Form -->
-            <div class="collapse w-75" id="searchForm">
+            <div class="w-100 my-2" id="searchForm">
                 <div class="container-sm">
                     <form method="get" action="index.php">
-                        <div class="input-group">
+                        <div class="d-flex">
                             <input type="text"
                                 name="search"
-                                class="form-control form-control-md"
+                                class="form-control form-control-md w-75"
                                 placeholder="Search games by title..."
                                 value="<?= htmlspecialchars($searchTerm) ?>">
 
-                            <select name="category_id" class="form-select form-select-md">
+                            <select name="category_id" class="form-select form-select-md w-25">
                                 <option value="0">All Categories</option>
                                 <?php foreach ($categories as $category): ?>
                                     <option value="<?= $category['category_id'] ?>"
@@ -150,13 +137,15 @@ if ($currentCategoryId > 0) {
                                 <?php endforeach; ?>
                             </select>
 
-                            <button type="submit" class="btn btn-dark btn-md">
+                            <button type="submit" class="btn btn-dark btn-md ">
                                 Confirm
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
+
+
         </div>
 
 
