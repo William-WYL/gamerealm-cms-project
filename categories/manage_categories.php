@@ -28,16 +28,11 @@ require('../tools/authenticate.php');
 
 <body>
   <div class="container">
-    <div class="py-4 text-start ">
-      <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm - Manage Categories</a></h1>
-    </div>
-
     <?php
     $basePath = "../";
     $currentPage = "categories";
     include '../components/navigation.php';
     ?>
-
     <div id="create_categories" class="container my-4">
       <form action="process_manage_categories.php" method="post">
         <fieldset>

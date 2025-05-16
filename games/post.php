@@ -39,10 +39,6 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
     <div class="container">
-        <div class="py-4 text-start">
-            <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm - Add New Game</a></h1>
-        </div>
-
         <?php
         $basePath = "../";
         $currentPage = "add_game";

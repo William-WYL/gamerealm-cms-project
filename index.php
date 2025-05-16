@@ -104,11 +104,6 @@ if ($currentCategoryId > 0) {
 
 <body class="bg-body">
     <div class="container">
-        <!-- Header -->
-        <div class="py-4 text-start">
-            <h1><a href="index.php" class="fs-1 fw-bolder text-decoration-none text-dark">GameRealm</a></h1>
-        </div> <!-- END div id="header" -->
-
         <?php
         $basePath = "./";
         $currentPage = "home";
@@ -118,31 +113,31 @@ if ($currentCategoryId > 0) {
         <!-- Main Search Form -->
         <div id="Search" class="d-flex w-100">
             <div class="w-100 my-2" id="searchForm">
-                <div class="container-sm">
-                    <form method="get" action="index.php">
-                        <div class="d-flex">
-                            <input type="text"
-                                name="search"
-                                class="form-control form-control-md w-75"
-                                placeholder="Search games by title..."
-                                value="<?= htmlspecialchars($searchTerm) ?>">
 
-                            <select name="category_id" class="form-select form-select-md w-25">
-                                <option value="0">All Categories</option>
-                                <?php foreach ($categories as $category): ?>
-                                    <option value="<?= $category['category_id'] ?>"
-                                        <?= $currentCategoryId == $category['category_id'] ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($category['category_name']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                <form method="get" action="index.php">
+                    <div class="d-flex">
+                        <input type="text"
+                            name="search"
+                            class="form-control form-control-md w-75 me-3"
+                            placeholder="Search games by title..."
+                            value="<?= htmlspecialchars($searchTerm) ?>">
 
-                            <button type="submit" class="btn btn-dark btn-md ">
-                                Confirm
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                        <select name="category_id" class="form-select form-select-md w-25 me-3">
+                            <option value="0">All Categories</option>
+                            <?php foreach ($categories as $category): ?>
+                                <option value="<?= $category['category_id'] ?>"
+                                    <?= $currentCategoryId == $category['category_id'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($category['category_name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+
+                        <button type="submit" class="btn btn-dark btn-md ">
+                            Confirm
+                        </button>
+                    </div>
+                </form>
+
             </div>
 
 

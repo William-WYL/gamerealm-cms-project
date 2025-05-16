@@ -85,10 +85,6 @@ $users = $statement->fetchAll();
 
 <body>
   <div class="container">
-    <div class="py-4 text-start ">
-      <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm - Manage Users</a></h1>
-    </div>
-
     <!-- Navigation bar section -->
     <?php
     $basePath = "../";

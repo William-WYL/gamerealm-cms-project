@@ -12,26 +12,12 @@
 
 <body>
   <div class="container">
-    <div class="py-4 text-start">
-      <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm - Add New Game</a></h1>
-    </div>
-
-    <nav id="menu" class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-2">
-      <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item"><a class="nav-link" href="../index.php">Home</a></li>
-          </ul>
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><a class="nav-link active" href="register.php">Sign up</a></li>
-            <li class="nav-item"><a class="nav-link" href="login.php">Log in</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <!-- Navigation Bar -->
+    <?php
+    $basePath = "../";
+    $currentPage = "signup";
+    include '../components/navigation.php';
+    ?>
 
     <!-- Registration Form Section -->
     <div id="user_register" class="container mt-5 mb-5">

@@ -89,9 +89,6 @@ $totalPages = ceil($totalComments / $limit);
 
 <body>
   <div class="container">
-    <div class="py-4 text-start ">
-      <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm -Manage Comments</a></h1>
-    </div>
 
     <?php
     $basePath = "../";

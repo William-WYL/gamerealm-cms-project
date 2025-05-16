@@ -197,54 +197,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
 <body>
   <div class="container">
-    <div class="py-4 text-start">
-      <h1><a href="../index.php" class="text-decoration-none text-dark">GameRealm</a> - <?= htmlspecialchars($game['title']) ?></h1>
-    </div>
-
-    <nav id="menu" class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-2">
-      <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item"><a class="nav-link" href="../index.php">Home</a></li>
-            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-              <li class="nav-item active"><a class="nav-link active" href="../games/post.php">Add Game</a></li>
-              <li class="nav-item"><a class="nav-link" href="../categories/manage_categories.php">Categories</a></li>
-              <li class="nav-item"><a class="nav-link" href="../users/manage_users.php">Users</a></li>
-              <li class="nav-item"><a class="nav-link" href="../comments/manage_comments.php">Comments</a></li>
-            <?php endif; ?>
-          </ul>
-          <ul class="navbar-nav ms-auto">
-            <?php if (isset($_SESSION['username'])): ?>
-              <li class="nav-item">
-                <span class="nav-link text-primary">Welcome, <?= htmlspecialchars($_SESSION['username']) ?>
-                  <?php if ($_SESSION['role'] === 'admin'): ?>
-                    <span class="admin-badge text-warning">(Admin)</span>
-                  <?php endif; ?>
-                </span>
-              </li>
-              <li class="nav-item"><a class="nav-link" href="../users/logout.php">Logout</a></li>
-            <?php else: ?>
-              <li class="nav-item"><a class="nav-link" href="../users/register.php">Sign up</a></li>
-              <li class="nav-item"><a class="nav-link" href="../users/login.php">Log in</a></li>
-            <?php endif; ?>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <?php
+    $basePath = "../";
+    $currentPage = "show_comments";
+    include '../components/navigation.php';
+    ?>
 
 
     <!-- Game Details Section -->
     <div class="row justify-content-start border-bottom mb-2">
+      <h3 class="mb-3 fw-bold"><?= htmlspecialchars($game['title']) ?></h3>
       <div class="col-md-6 text-start">
         <?php if (isset($game['cover_image'])) : ?>
           <img src="../asset/images/<?= htmlspecialchars($game['cover_image']) ?>" class="img-fluid mb-4" alt="<?= htmlspecialchars($game['title']) ?> Cover">
         <?php else : ?>
           <div class="no-image text-center fs-3 fw-light text-body-secondary">No Image</div>
         <?php endif ?>
-        <h5 class="mb-3"><?= htmlspecialchars($game['title']) ?></h5>
         <p><strong>Released:</strong> <?= date("F j, Y", strtotime($game['release_date'])) ?></p>
         <p><strong>Category:</strong> <?= htmlspecialchars($game['category_name'] ?? 'Uncategorized') ?></p>
         <p><?= nl2br(htmlspecialchars(html_entity_decode(($game['description'])))) ?></p>
