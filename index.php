@@ -11,7 +11,7 @@ $categories = $categoryStatement->fetchAll();
 // Handle search parameters
 $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
 $currentCategoryId = isset($_GET['category_id']) ? (int)$_GET['category_id'] : 0;
-$validSorts = ['title', 'category', 'date', 'price'];
+$validSorts = ['title', 'category', 'date', 'price', 'id'];
 $sort = isset($_GET['sort']) && in_array($_GET['sort'], $validSorts) ? $_GET['sort'] : 'date';
 
 // Pagination configuration
@@ -42,6 +42,9 @@ $whereClause = $queryConditions ? 'WHERE ' . implode(' AND ', $queryConditions) 
 // Configure sorting
 switch ($sort) {
 
+    case 'id':
+        $orderBy = 'g.id DESC';
+        break;
     case 'title':
         $orderBy = 'g.title ASC';
         break;
@@ -177,6 +180,13 @@ if ($currentCategoryId > 0) {
                                 'sort' => 'date'
                             ]) ?>" class="btn btn-outline-dark <?= $sort === 'date' ? 'active' : '' ?>">
                     Sort by Date
+                </a>
+                <a href="?<?= http_build_query([
+                                'search' => $searchTerm,
+                                'category_id' => $currentCategoryId,
+                                'sort' => 'id'
+                            ]) ?>" class="btn btn-outline-dark <?= $sort === 'id' ? 'active' : '' ?>">
+                    Sort by ID
                 </a>
             </div>
         </div>
