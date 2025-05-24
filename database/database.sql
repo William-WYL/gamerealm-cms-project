@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 21, 2025 at 10:24 PM
+-- Generation Time: May 24, 2025 at 09:18 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -71,7 +71,6 @@ CREATE TABLE `comments` (
 INSERT INTO `comments` (`id`, `game_id`, `content`, `created_at`, `user_id`, `status`) VALUES
 (29, 33, 'I spent more than 400 hours playing this masterpiece. Can&#039;t put it down!', '2025-03-27 20:04:02', 1, 'approved'),
 (43, 2, 'Best game ever!!!', '2025-03-28 14:40:11', 1, 'trash'),
-(47, 66, '&lt;script type=&quot;text/javascript&quot;&gt;\r\n  alert(&quot;p0wnd&quot;);\r\n&lt;/script&gt;', '2025-04-14 14:56:02', 1, 'approved'),
 (59, 1, 'This game is an absolute masterpiece with breathtaking visuals and immersive gameplay. The storyline keeps you engaged from start to finish, and the character development is top-notch. Multiplayer mode adds endless replayability. I highly recommend it to anyone who loves action RPGs. The developers deserve praise for their attention to detail.', '2025-04-21 15:04:36', 1, 'approved'),
 (60, 1, 'Incredible experience! The open-world design is vast yet filled with meaningful content. Combat mechanics are smooth, and the skill tree offers deep customization. The soundtrack perfectly complements the atmosphere. A must-play for fans of the genre.', '2025-04-21 15:04:36', 3, 'approved'),
 (61, 1, 'I have played over 100 hours and still find new things to explore. The quests are varied, and the NPC interactions feel authentic. Some minor bugs exist, but patches are frequent. A solid 9/10!', '2025-04-21 15:04:36', 4, 'approved'),
@@ -250,7 +249,6 @@ INSERT INTO `games` (`id`, `title`, `release_date`, `description`, `cover_image`
 (10, 'Spider-Man 2', '2023-10-20', 'Marvel&#039;s Spider-Man 2 is the next chapter in the critically acclaimed Spider-Man series. Play as both Peter Parker and Miles Morales as they team up to take on new threats including the deadly symbiote Venom and the ruthless Kraven the Hunter. Swing through an expanded New York City with new web-swinging mechanics, unlock powerful new abilities, and experience an emotional story about family, responsibility, and what it means to be a hero.', 'spiderman_2.jpg', 1, 69.99),
 (11, 'Persona 5', '2016-09-15', 'Persona series is a part of Japanese franchise Megami Tensei and is famous for its anime-like visual style. Persona 5 follows the unnamed main character, a high school student who was falsely accused of assault. He joins the Shujin Academy where he becomes the leading member of Phantom Thieves of Hearts. They are a gang of vigilantes who can to control their Personas and use them in a fight. The Personas are manifestations of people&rsquo;s personalities that look like fictional characters. The Phantom Thieves accompany the main character in his battles as a party.\r\nThe world of Persona consists of two parts. One is the modern Tokyo, in which the main characters live their daily teenagers&rsquo; lives. This is the place for most character interactions, including romancing. The other part is Metaverse, a parallel supernatural world that contains Palaces, which are manifestations of people&rsquo;s malicious thoughts and desires. By day, the main character and his friends attend school and meet friends, and by night, they fight villains in the Metaverse to steal treasures from their Palaces. Battles are turn-based, and characters use a variety of weapons as well as their Personas that provide them with battle magic.', 'p5.jpg', 3, 39.00),
 (33, 'Niho 2', '2020-03-13', 'UNLEASH YOUR DARKNESS\r\n\r\nMaster the art of the samurai in this brutal masocore RPG&hellip; for death is coming.\r\n\r\nJourney to 1555 Japan, a country gripped in endless warfare where monsters and evil spirits stalk a land of natural beauty and menacing peril.\r\n\r\nHunt down your enemies as a rogue mercenary wielding the supernatural powers of the mythical Yokai.\r\n\r\nCan you survive the treacherous Sengoku era and the new and terrifying Dark Realm?\r\n\r\n&bull; Discover deadly weapons and skills in a revamped combat system.\r\n&bull; Join friends online in multiplayer modes: summon allies to your aid in Visitors or play completed levels together in Expeditions.', '67e9f001373e0.png', 1, 39.99),
-(66, '&lt;script type=&quot;text/javascript&quot;&gt;   alert(&quot;p0wnd&quot;); &lt;/script&gt;', '2025-04-02', '&lt;script type=&quot;text/javascript&quot;&gt;\r\n  alert(&quot;p0wnd&quot;);\r\n&lt;/script&gt;\r\n', '67fd67b5601a3.jpg', 2, 11.00),
 (67, 'God of War: Ragnarök', '2022-11-09', 'Embark on a mythic journey through the Nine Realms as Kratos and Atreus face the impending apocalypse. With visceral combat and stunning visuals, this sequel expands the Norse saga with emotional depth and epic scale.', 'god_of_war_ragnarok.jpg', 1, 69.99),
 (68, 'Horizon Forbidden West', '2022-02-18', 'Explore a lush post-apocalyptic world as Aloy, uncovering secrets of ancient machines and battling colossal robotic creatures. This action-RPG combines exploration, strategic combat, and a gripping narrative.', 'horizon_forbidden_west.jpg', 2, 59.99),
 (70, 'Stray', '2022-07-19', 'Play as a stray cat navigating a cybercity filled with robots, puzzles, and hidden dangers. This indie gem offers a unique perspective and atmospheric storytelling.', 'stray.jpg', 2, 29.99),
@@ -267,7 +265,17 @@ INSERT INTO `games` (`id`, `title`, `release_date`, `description`, `cover_image`
 (83, 'Metroid Prime 4', '2024-12-31', 'Samus Aran returns in this first-person sci-fi epic. Explore alien worlds and combat cosmic threats with enhanced visor abilities.', 'metroid_prime4.jpg', 1, 59.99),
 (84, 'Animal Crossing: New Horizons 2', '2024-03-22', 'Build your dream island paradise with new villagers, crafting recipes, and seasonal events. Cross-play support included.', 'ac_new_horizons2.jpg', 7, 59.99),
 (85, 'Destiny 2: Lightfall', '2023-02-28', 'Guardians confront the Witness in Neomuna city. New Strand subclass and raid challenge your mastery of cosmic powers.', 'destiny2_lightfall.jpg', 4, 49.99),
-(86, 'Star Wars Jedi: Survivor', '2023-04-28', 'Continue Cal Kestis\' journey in this action-adventure sequel. Explore new planets and refine lightsaber combat styles.', 'jedi_survivor.jpg', 2, 69.99);
+(86, 'Star Wars Jedi: Survivor', '2023-04-28', 'Continue Cal Kestis\' journey in this action-adventure sequel. Explore new planets and refine lightsaber combat styles.', 'jedi_survivor.jpg', 2, 69.99),
+(87, 'Battlefield 2042', '2021-11-19', 'The next generation of all-out warfare featuring 128-player battles, dynamic weather events, and cutting-edge weaponry in near-future conflicts. Experience massive-scale destruction across evolving battlefields with full cross-play support.', '682b9d221e61c.jpg', 4, 59.99),
+(88, 'Age of Empires IV', '2021-10-28', 'The celebrated RTS franchise returns with 8 diverse civilizations across 4 campaigns spanning 500 years of history. Features stunning 4K visuals, innovative gameplay mechanics, and documentary-style storytelling.', '682b9d4b100f3.jpg', 6, 49.99),
+(89, 'Kingdom Come: Deliverance II', '2024-12-31', 'The hardcore historical RPG sequel expands Henry&#039;s journey with improved combat, deeper roleplaying systems, and an even more authentic recreation of 15th century Bohemia. Continue your rise from peasant to knight in this brutally realistic medieval world.', 'kcd2.jpg', 3, 69.99),
+(90, 'Total War: Pharaoh', '2023-10-11', 'Command the Bronze Age collapse in this historical strategy epic. Lead Egyptian, Hittite, or Canaanite factions with dynamic campaigns, court politics, and catastrophic natural disasters that reshape the battlefield.', '682b9d641e5e8.jpg', 6, 59.99),
+(91, 'Payday 3', '2023-09-21', 'The ultimate co-op heist shooter returns with new tools, tactics, and locations. Plan intricate robberies in dynamic environments that react to your crew&#039;s decisions, whether you go in guns blazing or execute the perfect stealth operation.', '682b9d7b186f8.jpg', 4, 39.99),
+(92, 'Company of Heroes 3', '2023-02-23', 'The acclaimed WWII RTS franchise evolves with full tactical pause, destructible environments, and dual campaigns in Italy and North Africa. Command ground, air, and naval forces with unprecedented battlefield control.', '682b9de11afd0.jpg', 6, 59.99),
+(93, 'Mount &amp; Blade II: Bannerlord', '2022-10-25', 'Build your empire in this massive medieval sandbox with refined combat, deep diplomacy, and real-time battles featuring hundreds of units. The ultimate fusion of RPG, strategy, and action gameplay.', '682b9db06db7f.jpg', 3, 49.99),
+(94, 'Arma 4', '2024-12-31', 'The next evolution in military simulation featuring a new engine, advanced ballistics, and dynamic campaigns. Experience large-scale combined arms warfare with unprecedented realism and modding capabilities.', '682b9b6b2815d.png', 4, 59.99),
+(95, 'Jagged Alliance 3', '2023-07-14', 'The beloved tactical mercenary management series returns with turn-based combat, RPG elements, and a sandbox campaign to liberate a fictional country. Hire unique mercs with personalities that clash and bond.', '682b9d3485be9.png', 6, 44.99),
+(96, 'Starship Troopers: Extermination', '2023-05-17', '16-player co-op FPS where you join the Mobile Infantry to battle endless Arachnid hordes. Build bases, complete objectives, and survive extraction in large-scale bug hunts inspired by the cult classic films.', '682b9d0592021.jpg', 4, 29.99);
 
 -- --------------------------------------------------------
 
@@ -298,7 +306,8 @@ INSERT INTO `users` (`id`, `username`, `email`, `password`, `role`) VALUES
 (14, 'sun', 'sun@rrc.ca', '$2y$10$xbRZFb97.f4HFGxK//qT2OwnJlZtbmdESiTpCf2qdq8ga1rG19TOi', 'user'),
 (15, 'zhou', 'zhou@rrc.ca', '$2y$10$FL66ddZqbQdatqV5u/gfg.Bbt8dtI7cMytQzlKD2liZwuNGPnL7aK', 'user'),
 (16, 'jiang', 'jiang@rrc.ca', '$2y$10$9VK064jbV838/IwoNwrFGenkuCRF9teHvxBIFpeN783YRU65u1PvS', 'user'),
-(17, 'yang', 'yang@rrc.ca', '$2y$10$I17ZvRobq9uG40T5024QduI8FCkyJ3oEys7bZxfkDtQk38QCnXrfO', 'user');
+(17, 'yang', 'yang@rrc.ca', '$2y$10$I17ZvRobq9uG40T5024QduI8FCkyJ3oEys7bZxfkDtQk38QCnXrfO', 'user'),
+(19, 'bobbob', 'bob@email.com', '$2y$10$c4NRbujzpTpLLNZZGYX7we8EAMcr2LylY35zjZKAduBvoVgT7uPnK', 'user');
 
 --
 -- Indexes for dumped tables
@@ -353,13 +362,13 @@ ALTER TABLE `comments`
 -- AUTO_INCREMENT for table `games`
 --
 ALTER TABLE `games`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Constraints for dumped tables
